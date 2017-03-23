@@ -10,5 +10,7 @@ Gem::Specification.new do |s|
     s.files = ["lib/scrapedb.rb"]
     s.homepage = 'http://any.hall'
     s.license = 'GPL'
+    s.add_runtime_dependency "highline", "~> 1.7"
+    s.add_runtime_dependency "mechanize", "~> 2"
 end
 
