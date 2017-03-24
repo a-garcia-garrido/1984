@@ -1,10 +1,11 @@
 #!/usr/bin/env ruby
 
-require 'highline/import'
+require 'highline'
 require 'scrapedb'
 
-login = ask('Login: ')
-passw = ask('Password: ') { |q| q.echo = false }
+cli = HighLine.new
+login = cli.ask('Login: ')
+passw = cli.ask('Password: ') { |q| q.echo = "*" }
 
-Scrapedb.new login, passw
+Scrapedb.new(login, passw)
 

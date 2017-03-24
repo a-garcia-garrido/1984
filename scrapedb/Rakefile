@@ -1,0 +1,5 @@
+desc "Build and install scrapedb gem"
+task :make do
+    sh "gem build scrapedb.gemspec"
+    sh "gem install scrapedb-0.0.0.gem"
+end
