@@ -1,16 +1,26 @@
-Gem::Specification.new do |s|
-    s.name = 'scrapedb'
-    s.version = '0.0.0'
-    s.date = '2017-03-23'
-    s.executables << 'scrapedb'
-    s.summary = "Scrapes pictures"
-    s.description = 'Scrapes a web for pictures and names'
-    s.authors = ['imasen']
-    s.email = 'any@any.any'
-    s.files = ["lib/scrapedb.rb"]
-    s.homepage = 'http://any.hall'
-    s.license = 'GPL'
-    s.add_runtime_dependency "highline", "~> 1.7"
-    s.add_runtime_dependency "mechanize", "~> 2"
-end
+# coding: utf-8
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'scrapedb/version'
 
+Gem::Specification.new do |spec|
+  spec.name          = "scrapedb"
+  spec.version       = Scrapedb::VERSION
+  spec.authors       = ["Txemagon / Imasen"]
+  spec.email         = ["txema.gonz@gmail.com"]
+  spec.summary       = %q{Scrape some place.}
+  spec.description   = %q{Scrape some place looking for pictures and names.}
+  spec.homepage      = ""
+  spec.license       = "MIT"
+
+  spec.files         = `git ls-files -z`.split("\x0")
+  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
+  spec.require_paths = ["lib"]
+
+  spec.add_development_dependency "bundler", "~> 1.6"
+  spec.add_development_dependency "rake"
+
+  spec.add_dependency "selenium-webdriver"
+  spec.add_dependency "highline"
+end

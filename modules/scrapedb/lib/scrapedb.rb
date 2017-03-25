@@ -1,25 +1,51 @@
-require 'mechanize'
+require "scrapedb/version"
+require "scrapedb/educamos"
+require 'highline'
+require 'yaml'
+require 'fileutils'
 
 class Scrapedb
 
-    LOGIN_PAGE = "https://sso2.educamos.com/Autenticacion/Acceder?ReturnUrl=%2fissue%2fwsfed%3fwa%3dwsignin1.0%26wtrealm%3dhttps%253a%252f%252fsantodomingosavio-salesianos-madrid.educamos.com%252f%26wctx%3drm%253d0%2526id%253dpassive%2526ru%253d%25252f%26wct%3d2017-03-23T18%253a52%253a31Z&wa=wsignin1.0&wtrealm=https%3a%2f%2fsantodomingosavio-salesianos-madrid.educamos.com%2f&wctx=rm%3d0%26id%3dpassive%26ru%3d%252f&wct=2017-03-23T18%3a52%3a31Z"
+    OUTPUT_DIR = File.join(ENV['HOME'], '.scrapedb/output')
+    LEVEL_F    = 'levels.yml'
 
-    @login
-    @pass
-    @agent
+    attr_reader :login, :passw, :levels, :connection
 
-    def initialize(login, pass)
-        @login, @pass = login, pass
-        puts "Scrapedb is running on behalf of #{@login}"
-        @agent = Mechanize.new
-        login_result = @agent.get(LOGIN_PAGE) do |page|
-            page.form_with(:method => 'post') do |login|
-                login.NombreUsuario = @login
-                login.Clave = @pass
-            end.submit
-        end
-
-       # puts login_result.inspect
+    def initialize
+        FileUtils.mkdir_p OUTPUT_DIR unless Dir.exists? OUTPUT_DIR
+        fetch_levels
+        #fetch_users @level
     end
-end
 
+    def fetch_levels
+        level_fn = File.join(OUTPUT_DIR, LEVEL_F)
+        if (!File.file?(level_fn))
+            login unless @connection
+            @levels = @connection.scrape_levels
+            File.open(level_fn, 'w') { |f| f.write @levels.to_yaml }
+        end
+        @levels ||= YAML::load_file(level_fn)
+    end
+
+    def fecth_users(level)
+    end
+
+    private
+
+    def ask_credentials
+        cli = HighLine.new
+        @login = cli.ask('Login: ')
+        @passw = cli.ask('Password: ') { |q| q.echo = "*"  }
+    end
+
+    def got_credentials?
+        @login and @passw
+    end
+
+    def login
+        ask_credentials unless got_credentials?
+        @connection = Educamos.new(@login, @passw)
+        sleep 10
+    end
+
+end

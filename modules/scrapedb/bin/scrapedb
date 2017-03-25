@@ -1,11 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'highline'
 require 'scrapedb'
 
-cli = HighLine.new
-login = cli.ask('Login: ')
-passw = cli.ask('Password: ') { |q| q.echo = "*" }
-
-Scrapedb.new(login, passw)
+data = Scrapedb.new
 
