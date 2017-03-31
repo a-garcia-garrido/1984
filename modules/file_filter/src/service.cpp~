@@ -1,0 +1,13 @@
+#include <stdlib.h>
+#include "stack.h"
+
+
+int
+main(int argc, char *argv[])
+{
+    struct TStack filter;
+
+    push("filter_image", &filter);
+
+    return EXIT_SUCCESS;
+}

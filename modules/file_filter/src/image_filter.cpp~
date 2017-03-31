@@ -1,0 +1,18 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_BUFF 0x4000
+
+bool
+filter_passes ()
+{
+  char buffer[MAX_BUFF];
+  FILE *pc = popen ("file - | grep \"image data\" > /dev/null", "w");
+
+  while (fgets (buffer, MAX_BUFF, stdin))
+    {
+      fprintf (pc, "%s", buffer);
+    }
+
+  return !pclose (pc);
+}
