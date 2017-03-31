@@ -4,7 +4,8 @@ class MyEventHandeler(pyinotify.ProcessEvent):
     def process_IN_ACCESS(self, event):
         print "ACCESS event: ", event.pathname
     def process_IN_CREATE(self, event):
-        print "CREATE event: ", event.pathname
+        print event.path
+        print event.name
 
 def main():
     wm = pyinotify.WatchManager()
