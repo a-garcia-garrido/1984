@@ -1,10 +1,18 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "image_filter.h"
 
-#define MAX_BUFF 0x4000
+#ifndef NDEBUG
+void
+on_load()
+{
+    fprintf(stderr, "%s loaded.\n", filter_name);
+}
 
-const char *filter_name = "image_filter";
-const char *filter_desc = "image filetype filter";
+void
+on_unload()
+{
+    fprintf(stderr, "%s unloaded.\n", filter_name);
+}
+#endif
 
 bool
 filter_passes ()
@@ -21,7 +29,7 @@ filter_passes ()
   rv = !pclose (pc);
 
 #ifndef NDEBUG
-  fprintf(stderr, "%s: %i\n", filter_name, rv);
+  fprintf (stderr, "%s: %i\n", filter_name, rv);
 #endif
 
   return rv;

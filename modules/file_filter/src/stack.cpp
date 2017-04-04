@@ -5,15 +5,21 @@ push (const char *filter_name, struct TStack * s)
 {
   char fn[MAX_LINE];
   void *mod;
+  char *exe_dir = get_self_executable_dir();
 
-  sprintf (fn, "./modules/%s.so", filter_name);
+  sprintf (fn, "%s/modules/%s.so", exe_dir, filter_name);
+#ifndef NDEBUG
+  fprintf(stderr, "Loading %s\n", fn);
+#endif
 
   if (s->summit >= MAX_FILTER)
     return false;
 
   mod = dlopen (fn, RTLD_NOW);
   if (!mod)
-      prerror("Could not open file ", filter_name);
+    prerror ("Could not open file %s.\n%s\n", filter_name, dlerror ());
+
+  free(exe_dir);
 
   s->data[s->summit++] = mod;
 
