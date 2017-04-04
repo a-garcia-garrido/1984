@@ -1,0 +1,6 @@
+
+Goost mira estas dos url's
+http://docs.opencv.org/2.4/modules/contrib/doc/facerec/facerec_tutorial.html
+http://docs.opencv.org/2.4/modules/contrib/doc/facerec/facerec_api.html
+
+instala directamente con el apt-get libopencv-dev y el contrib (usamos la version 2)
