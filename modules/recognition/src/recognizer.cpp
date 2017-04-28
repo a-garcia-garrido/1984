@@ -13,14 +13,14 @@ void detectAndDisplay(Mat frame);
 
 // Global variables
 // Copy this file from opencv/data/haarscascades to target folder
-string face_cascade_name = "data/haarcascades/haarcascade_frontalface_alt.xml";
+string face_cascade_name = "/home/pc02/opencv/data/haarcascades/haarcascade_frontalface_alt.xml";
 CascadeClassifier face_cascade;
 string window_name = "Capture - Face detection";
 int filenumber; // Number of file to be saved
 string filename;
 
 // Function main
-int main(void)
+int main(int argc, char *argv[])
 {
     // Load the cascade
     if (!face_cascade.load(face_cascade_name)){
@@ -29,7 +29,7 @@ int main(void)
     }
 
     // Read the image file
-    Mat frame = imread("lena2.jpg");
+    Mat frame = imread(argv[1]);
 
     // Apply the classifier to the frame
     if (!frame.empty()){
