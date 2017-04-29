@@ -8,6 +8,7 @@
 
 #define PORT 3550
 #define BACKLOG 2
+#define MAXBUFF 2048
 
 int main()
 {
@@ -16,6 +17,7 @@ int main()
    struct sockaddr_in server;
    struct sockaddr_in client;
    socklen_t sin_size;
+   char image[MAXBUFF];
 
 
    fd=socket(AF_INET, SOCK_STREAM, 0);
@@ -32,7 +34,14 @@ int main()
    while(1) {
       sin_size = sizeof(struct sockaddr_in);
       fd2 = accept(fd,(struct sockaddr *)&client, &sin_size);
-      write(fd2, "Bienvenido a mi servidor", 24);
+      read(fd2, image, MAXBUFF);
+      FILE *pf;
+
+      pf = fopen("prueba.png", "w");
+
+      fprintf(pf,"%s", image);
+
+    fclose(pf);
       close(fd2);
    }
    close(fd);
