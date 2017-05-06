@@ -6,9 +6,11 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+#include "image_file.h"
+
 #define PORT 3550
 #define BACKLOG 2
-#define MAXBUFF 2048
+#define MAXBUFF 4096
 
 int main()
 {
@@ -17,7 +19,8 @@ int main()
    struct sockaddr_in server;
    struct sockaddr_in client;
    socklen_t sin_size;
-   char image[MAXBUFF];
+   struct Timage image;
+   char *filename = "image1.png";
 
 
    fd=socket(AF_INET, SOCK_STREAM, 0);
@@ -34,14 +37,8 @@ int main()
    while(1) {
       sin_size = sizeof(struct sockaddr_in);
       fd2 = accept(fd,(struct sockaddr *)&client, &sin_size);
-      read(fd2, image, MAXBUFF);
-      FILE *pf;
-
-      pf = fopen("prueba.png", "w");
-
-      fprintf(pf,"%s", image);
-
-    fclose(pf);
+      read(fd2, &image, sizeof(struct Timage));
+      write_png_file(filename, image);
       close(fd2);
    }
    close(fd);

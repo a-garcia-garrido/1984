@@ -1,21 +1,6 @@
-//this compile like this: gcc images.cpp -lpng -o images
-//this need de libpng and zlib.
+#include "image_file.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <png.h>
-
-struct Timage{
-int width;
-int height;
-png_byte color_type;
-png_byte bit_depth;
-png_bytep *row_pointers;
-};
-
-struct Timage image;
-
-void read_png_file(char *filename) {
+void read_png_file(char *filename, struct Timage image) {
   FILE *fp = fopen(filename, "rb");
 
   png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
@@ -76,8 +61,7 @@ void read_png_file(char *filename) {
     info=NULL;
 }
 
-void write_png_file(char *filename) {
-  int y;
+void write_png_file(char *filename, struct Timage image) {
 
   FILE *fp = fopen(filename, "wb");
   if(!fp) abort();
@@ -117,24 +101,4 @@ void write_png_file(char *filename) {
 
   if (png && info)
         png_destroy_write_struct(&png, &info);
-}
-
-void process_png_file() {
-  for(int y = 0; y < image.height; y++) {
-    png_bytep row = image.row_pointers[y];
-    for(int x = 0; x < image.width; x++) {
-      png_bytep px = &(row[x * 4]);
-      // Do something awesome for each pixel here...
-      //printf("%4d, %4d = RGBA(%3d, %3d, %3d, %3d)\n", x, y, px[0], px[1], px[2], px[3]);
-    }
-  }
-}
-
-int main(int argc, char *argv[]) {
-  if(argc != 3) abort();
-
-  read_png_file(argv[1]);
-  write_png_file(argv[2]);
-
-  return 0;
 }
