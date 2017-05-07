@@ -13,6 +13,8 @@ void read_png_file(char *filename, struct Timage image) {
 
   png_init_io(png, fp);
 
+  png_set_user_limits(png, 0x7fffffffL, 0x7fffffffL);
+
   png_read_info(png, info);
 
   image.width      = png_get_image_width(png, info);
@@ -75,6 +77,8 @@ void write_png_file(char *filename, struct Timage image) {
   if (setjmp(png_jmpbuf(png))) abort();
 
   png_init_io(png, fp);
+
+  png_set_user_limits(png, 0x7fffffffL, 0x7fffffffL);
 
   // Output is 8bit depth, RGBA format.
   png_set_IHDR(

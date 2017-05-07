@@ -6,25 +6,31 @@
 #include<sys/socket.h>
 #include<netinet/in.h>
 #include<netdb.h>
+
+#include "image_file.h"
+
 int main(int argc, char **argv){
-  struct sockaddr_in cliente; //Declaración de la estructura con información para la conexión
-  struct hostent *servidor; //Declaración de la estructura con información del host
-  servidor = gethostbyname(argv[1]); //Asignacion
-  int puerto, conexion;
-  char buffer[100];
+  struct sockaddr_in client; //Declaración de la estructura con información para la conexión
+  struct hostent *server; //Declaración de la estructura con información del host
+  server = gethostbyname(argv[1]); //Asignacion
+  int port, fd;
+  struct Timage image;
+  char *filename;
 
-  conexion = socket(AF_INET, SOCK_STREAM, 0); //Asignación del socket
-  puerto=(atoi(argv[2])); //conversion del argumento
-  bzero((char *)&cliente, sizeof((char *)&cliente)); //Rellena toda la estructura de 0's
+  fd = socket(AF_INET, SOCK_STREAM, 0); //Asignación del socket
+  port=(atoi(argv[2])); //conversion del argumento
+  bzero((char *)&client, sizeof((char *)&client)); //Rellena toda la estructura de 0's
         //La función bzero() es como memset() pero inicializando a 0 todas la variables
-  cliente.sin_family = AF_INET; //asignacion del protocolo
-  cliente.sin_port = htons(puerto); //asignacion del puerto
-  bcopy((char *)servidor->h_addr, (char *)&cliente.sin_addr.s_addr, sizeof(servidor->h_length));
+  client.sin_family = AF_INET; //asignacion del protocolo
+  client.sin_port = htons(port); //asignacion del puerto
+  bcopy((char *)server->h_addr, (char *)&client.sin_addr.s_addr, sizeof(server->h_length));
 
-  connect(conexion,(struct sockaddr *)&cliente, sizeof(cliente));
-  printf("Escribe un mensaje: ");
-  fgets(buffer, 100, stdin);
-  write(conexion, buffer, 100); //envio
-  bzero(buffer, 100);
+  connect(fd,(struct sockaddr *)&client, sizeof(client));
+  printf("Escribe el nombre de la imagen: ");
+  //fgets(filename, 100, stdin);
+  scanf("%s", filename);
+  read_png_file(filename,image);
+  write(fd, &image, sizeof(struct Timage)); //envio
+  bzero(&image, sizeof(struct Timage));
 return 0;
 }

@@ -20,7 +20,7 @@ int main()
    struct sockaddr_in client;
    socklen_t sin_size;
    struct Timage image;
-   char *filename = "image1.png";
+   char *filename = (char *)"image1.png";
 
 
    fd=socket(AF_INET, SOCK_STREAM, 0);
