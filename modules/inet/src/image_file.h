@@ -6,12 +6,12 @@
 #include <png.h>
 
 #pragma pack(1)
-struct Timage{
-int width;
-int height;
-png_byte color_type;
-png_byte bit_depth;
-png_bytep *row_pointers;
+struct Timage {
+    int width;
+    int height;
+    png_byte color_type;
+    png_byte bit_depth;
+    png_bytep *row_pointers;
 };
 #pragma pack(0)
 
