@@ -1,10 +1,9 @@
 #include "image_file.h"
 
-void
-read_png_file (char *filename, struct Timage &image)
-{
-  FILE *fp = fopen (filename, "rb");
 
+void
+read_png_file (FILE *fp, struct Timage &image)
+{
   png_structp png =
     png_create_read_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
   if (!png)
@@ -28,6 +27,11 @@ read_png_file (char *filename, struct Timage &image)
   image.color_type = png_get_color_type (png, info);
   image.bit_depth = png_get_bit_depth (png, info);
 
+#ifndef NDEBUG
+  fprintf(stderr, "width: %i\n"
+                  "height: %i\n"
+                  "depth: %i\n", image.width, image.height, image.bit_depth);
+#endif
   // Read any color_type into 8bit depth, RGBA format.
 
   if (image.bit_depth == 16)
@@ -88,7 +92,6 @@ write_png_file (char *filename, struct Timage image)
   png_infop info = png_create_info_struct (png);
   if (!info)
     abort ();
-
   if (setjmp (png_jmpbuf (png)))
     abort ();
 
