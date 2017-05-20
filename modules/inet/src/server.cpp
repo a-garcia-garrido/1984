@@ -20,31 +20,32 @@ const char *default_filename =  "default_received.png";
 
 static void
 cleanup_child_keeper(int signal_number) {
-    int status;
-    wait(&status);
+  int status;
+  wait(&status);
 }
 
 static void
 handle(int connection, const char * filename) {
-    char buffer[MAXBUFF];
-    char *image = NULL;
-    size_t size = 0;
-    ssize_t bytes_read;
-    FILE *pf = NULL;
+  char buffer[MAXBUFF];
+  char *image = NULL;
+  size_t size = 0;
+  ssize_t bytes_read;
+  FILE *pf = NULL;
 
-    do {
+  do {
     bytes_read = read(connection, buffer, sizeof(buffer));
     if (bytes_read > 0){
-       image = (char *) realloc(image, size+bytes_read);
-       memcpy(buffer, image+size, bytes_read) ;
-       size += bytes_read;
-       fprintf(stderr, "received %li bytes. Size: %li\n", bytes_read, size);
+      image = (char *) realloc(image, size+bytes_read);
+      memcpy(buffer, image+size, bytes_read) ;
+      size += bytes_read;
+      fprintf(stderr, "received %li bytes. Size: %li\n", bytes_read, size);
     }
-  }while (bytes_read == MAXBUFF);
-    fprintf(stderr, "total: %li bytes - ", size);
-    pf = fopen (filename, "w");
-    fwrite(image, sizeof(char), size, pf);
-    fclose(pf);
+  }while (bytes_read > 0);
+  fprintf(stderr, "total: %li bytes - ", size);
+  pf = fopen (filename, "wb");
+  fwrite(image, sizeof(char), size, pf);
+  fclose(pf);
+  free(image);
 }
 
 int
@@ -75,22 +76,23 @@ main ()
   listen (socket_fd, BACKLOG);
 
   fprintf (stderr, "%s up and running.\n", prog_name);
-  while (1)
-    {
-      sin_size = sizeof (struct sockaddr_in);
-      connection = accept (socket_fd, (struct sockaddr *) &client, &sin_size);
-      child_pid = fork();
-      if (child_pid == 0){
-          close(STDIN_FILENO);
-          close(STDOUT_FILENO);
-          close(socket_fd);
-          handle(connection, filename);
-          close(connection);
-          exit(0);
-      } else
-          close(connection);
-      strcpy(filename, "vacio.png");
-    }
+  while (connection != -1)
+  {
+    sin_size = sizeof (struct sockaddr_in);
+    connection = accept (socket_fd, (struct sockaddr *) &client, &sin_size);
+    child_pid = fork();
+    if (child_pid == 0){
+      close(STDIN_FILENO);
+      close(STDOUT_FILENO);
+      close(socket_fd);
+      handle(connection, filename);
+      close(connection);
+      exit(0);
+    } else
+    close(connection);
+    strcpy(filename, "vacio.png");
+  }
+  printf("\n");
   close (socket_fd);
   return EXIT_SUCCESS;
 }
