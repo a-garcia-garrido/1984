@@ -34,7 +34,6 @@ handle(int connection, const char * filename) {
 
     do {
     bytes_read = read(connection, buffer, sizeof(buffer));
-    fprintf(stderr, "read bytes: %li\n", bytes_read);
     if (bytes_read > 0){
        image = (char *) realloc(image, size+bytes_read);
        memcpy(buffer, image+size, bytes_read) ;
@@ -76,7 +75,7 @@ main ()
   listen (socket_fd, BACKLOG);
 
   fprintf (stderr, "%s up and running.\n", prog_name);
-  do
+  while (1)
     {
       sin_size = sizeof (struct sockaddr_in);
       connection = accept (socket_fd, (struct sockaddr *) &client, &sin_size);
@@ -87,12 +86,11 @@ main ()
           close(socket_fd);
           handle(connection, filename);
           close(connection);
-          fprintf(stderr, "connection close: %i - ", connection);
           exit(0);
       } else
           close(connection);
       strcpy(filename, "vacio.png");
-    }while(connection != -1);
-    close (socket_fd);
+    }
+  close (socket_fd);
   return EXIT_SUCCESS;
 }
