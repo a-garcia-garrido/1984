@@ -12,7 +12,7 @@
 
 #define PORT 3550
 #define BACKLOG 2
-#define MAXBUFF 0x100000
+#define MAXBUFF 4096
 #define MAX_STR 0x100
 
 const char *prog_name = "photo_keeper";
@@ -30,28 +30,21 @@ handle(int connection, const char * filename) {
     char *image = NULL;
     size_t size = 0;
     ssize_t bytes_read;
-    FILE *pf = NULL; /*writable file*/
-    insigned total;
+    FILE *pf = NULL;
 
-    FILE *socket = fdopen(connection, "r"); /* Make fscanf available from the socket*/
-    fscanf(socket, " %u", &total);
     do {
     bytes_read = read(connection, buffer, sizeof(buffer));
-    fprintf(stderr, "read bytes: %li\n", bytes_read);
-    fprintf(stderr, "Last: %u\n", buffer[bytes_read-1] );
     if (bytes_read > 0){
        image = (char *) realloc(image, size+bytes_read);
        memcpy(buffer, image+size, bytes_read) ;
        size += bytes_read;
        fprintf(stderr, "received %li bytes. Size: %li\n", bytes_read, size);
     }
-  }while (size < total);
+  }while (bytes_read == MAXBUFF);
     fprintf(stderr, "total: %li bytes - ", size);
-    if (size > 0){
     pf = fopen (filename, "w");
     fwrite(image, sizeof(char), size, pf);
     fclose(pf);
-  }
 }
 
 int
@@ -82,7 +75,7 @@ main ()
   listen (socket_fd, BACKLOG);
 
   fprintf (stderr, "%s up and running.\n", prog_name);
-  do
+  while (1)
     {
       sin_size = sizeof (struct sockaddr_in);
       connection = accept (socket_fd, (struct sockaddr *) &client, &sin_size);
@@ -93,12 +86,11 @@ main ()
           close(socket_fd);
           handle(connection, filename);
           close(connection);
-          fprintf(stderr, "connection close: %i - ", connection);
           exit(0);
       } else
           close(connection);
       strcpy(filename, "vacio.png");
-    }while(connection != -1);
-    close (socket_fd);
+    }
+  close (socket_fd);
   return EXIT_SUCCESS;
 }

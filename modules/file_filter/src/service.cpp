@@ -6,18 +6,17 @@
 int
 main (int argc, char *argv[])
 {
-  struct TStack filter;
-  char *mf = NULL;		/* Memmory file */
+  struct TStack filter; //structura de la pila
+  char *mf = NULL; /* Memmory file */
 
-  bzero (&filter, sizeof (filter));
-  push ("image_filter", &filter);
+  push ("image_filter", &filter);//añadir un filtro a la pila
 
   /*
    * int len = load_file(&mf);
-   */
+  */
 
-  int rv = pass_any (&filter);
-  clear (&filter);
+  int rv = pass_any(&filter);// meter el
+  clear(&filter);
 
-  return !rv;
+  return rv;
 }
