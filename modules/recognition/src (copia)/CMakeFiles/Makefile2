@@ -54,45 +54,45 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/morgal/work/1984/modules/recognition/src
+CMAKE_SOURCE_DIR = /home/tester/github/1984/modules/recognition/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/morgal/work/1984/modules/recognition/src
+CMAKE_BINARY_DIR = /home/tester/github/1984/modules/recognition/src
 
 #=============================================================================
-# Target rules for target CMakeFiles/reconocimiento_facial.dir
+# Target rules for target CMakeFiles/recognizer.dir
 
 # All Build rule for target.
-CMakeFiles/reconocimiento_facial.dir/all:
-	$(MAKE) -f CMakeFiles/reconocimiento_facial.dir/build.make CMakeFiles/reconocimiento_facial.dir/depend
-	$(MAKE) -f CMakeFiles/reconocimiento_facial.dir/build.make CMakeFiles/reconocimiento_facial.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/morgal/work/1984/modules/recognition/src/CMakeFiles --progress-num=1,2 "Built target reconocimiento_facial"
-.PHONY : CMakeFiles/reconocimiento_facial.dir/all
+CMakeFiles/recognizer.dir/all:
+	$(MAKE) -f CMakeFiles/recognizer.dir/build.make CMakeFiles/recognizer.dir/depend
+	$(MAKE) -f CMakeFiles/recognizer.dir/build.make CMakeFiles/recognizer.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/tester/github/1984/modules/recognition/src/CMakeFiles --progress-num=1,2 "Built target recognizer"
+.PHONY : CMakeFiles/recognizer.dir/all
 
 # Include target in all.
-all: CMakeFiles/reconocimiento_facial.dir/all
+all: CMakeFiles/recognizer.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/reconocimiento_facial.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/morgal/work/1984/modules/recognition/src/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/reconocimiento_facial.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/morgal/work/1984/modules/recognition/src/CMakeFiles 0
-.PHONY : CMakeFiles/reconocimiento_facial.dir/rule
+CMakeFiles/recognizer.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/tester/github/1984/modules/recognition/src/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/recognizer.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/tester/github/1984/modules/recognition/src/CMakeFiles 0
+.PHONY : CMakeFiles/recognizer.dir/rule
 
 # Convenience name for target.
-reconocimiento_facial: CMakeFiles/reconocimiento_facial.dir/rule
+recognizer: CMakeFiles/recognizer.dir/rule
 
-.PHONY : reconocimiento_facial
-
-# clean rule for target.
-CMakeFiles/reconocimiento_facial.dir/clean:
-	$(MAKE) -f CMakeFiles/reconocimiento_facial.dir/build.make CMakeFiles/reconocimiento_facial.dir/clean
-.PHONY : CMakeFiles/reconocimiento_facial.dir/clean
+.PHONY : recognizer
 
 # clean rule for target.
-clean: CMakeFiles/reconocimiento_facial.dir/clean
+CMakeFiles/recognizer.dir/clean:
+	$(MAKE) -f CMakeFiles/recognizer.dir/build.make CMakeFiles/recognizer.dir/clean
+.PHONY : CMakeFiles/recognizer.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/recognizer.dir/clean
 
 .PHONY : clean
 

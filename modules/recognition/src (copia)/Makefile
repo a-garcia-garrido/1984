@@ -48,24 +48,13 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/morgal/work/1984/modules/recognition/src
+CMAKE_SOURCE_DIR = /home/tester/github/1984/modules/recognition/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/morgal/work/1984/modules/recognition/src
+CMAKE_BINARY_DIR = /home/tester/github/1984/modules/recognition/src
 
 #=============================================================================
 # Targets provided globally by CMake.
-
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
 
 # Special rule for the target edit_cache
 edit_cache:
@@ -78,11 +67,22 @@ edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
 
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
+
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/morgal/work/1984/modules/recognition/src/CMakeFiles /home/morgal/work/1984/modules/recognition/src/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/tester/github/1984/modules/recognition/src/CMakeFiles /home/tester/github/1984/modules/recognition/src/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/morgal/work/1984/modules/recognition/src/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/tester/github/1984/modules/recognition/src/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,44 +111,44 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named reconocimiento_facial
+# Target rules for targets named recognizer
 
 # Build rule for target.
-reconocimiento_facial: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 reconocimiento_facial
-.PHONY : reconocimiento_facial
+recognizer: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 recognizer
+.PHONY : recognizer
 
 # fast build rule for target.
-reconocimiento_facial/fast:
-	$(MAKE) -f CMakeFiles/reconocimiento_facial.dir/build.make CMakeFiles/reconocimiento_facial.dir/build
-.PHONY : reconocimiento_facial/fast
+recognizer/fast:
+	$(MAKE) -f CMakeFiles/recognizer.dir/build.make CMakeFiles/recognizer.dir/build
+.PHONY : recognizer/fast
 
-reconocimiento_facial.o: reconocimiento_facial.cpp.o
+recognizer.o: recognizer.cpp.o
 
-.PHONY : reconocimiento_facial.o
+.PHONY : recognizer.o
 
 # target to build an object file
-reconocimiento_facial.cpp.o:
-	$(MAKE) -f CMakeFiles/reconocimiento_facial.dir/build.make CMakeFiles/reconocimiento_facial.dir/reconocimiento_facial.cpp.o
-.PHONY : reconocimiento_facial.cpp.o
+recognizer.cpp.o:
+	$(MAKE) -f CMakeFiles/recognizer.dir/build.make CMakeFiles/recognizer.dir/recognizer.cpp.o
+.PHONY : recognizer.cpp.o
 
-reconocimiento_facial.i: reconocimiento_facial.cpp.i
+recognizer.i: recognizer.cpp.i
 
-.PHONY : reconocimiento_facial.i
+.PHONY : recognizer.i
 
 # target to preprocess a source file
-reconocimiento_facial.cpp.i:
-	$(MAKE) -f CMakeFiles/reconocimiento_facial.dir/build.make CMakeFiles/reconocimiento_facial.dir/reconocimiento_facial.cpp.i
-.PHONY : reconocimiento_facial.cpp.i
+recognizer.cpp.i:
+	$(MAKE) -f CMakeFiles/recognizer.dir/build.make CMakeFiles/recognizer.dir/recognizer.cpp.i
+.PHONY : recognizer.cpp.i
 
-reconocimiento_facial.s: reconocimiento_facial.cpp.s
+recognizer.s: recognizer.cpp.s
 
-.PHONY : reconocimiento_facial.s
+.PHONY : recognizer.s
 
 # target to generate assembly for a file
-reconocimiento_facial.cpp.s:
-	$(MAKE) -f CMakeFiles/reconocimiento_facial.dir/build.make CMakeFiles/reconocimiento_facial.dir/reconocimiento_facial.cpp.s
-.PHONY : reconocimiento_facial.cpp.s
+recognizer.cpp.s:
+	$(MAKE) -f CMakeFiles/recognizer.dir/build.make CMakeFiles/recognizer.dir/recognizer.cpp.s
+.PHONY : recognizer.cpp.s
 
 # Help Target
 help:
@@ -156,12 +156,12 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... reconocimiento_facial"
-	@echo "... reconocimiento_facial.o"
-	@echo "... reconocimiento_facial.i"
-	@echo "... reconocimiento_facial.s"
+	@echo "... rebuild_cache"
+	@echo "... recognizer"
+	@echo "... recognizer.o"
+	@echo "... recognizer.i"
+	@echo "... recognizer.s"
 .PHONY : help
 
 

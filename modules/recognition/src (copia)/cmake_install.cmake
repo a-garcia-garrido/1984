@@ -1,4 +1,4 @@
-# Install script for directory: /home/morgal/work/1984/modules/recognition/src
+# Install script for directory: /home/tester/github/1984/modules/recognition/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/morgal/work/1984/modules/recognition/src/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/tester/github/1984/modules/recognition/src/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
