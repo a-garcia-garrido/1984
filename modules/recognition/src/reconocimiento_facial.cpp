@@ -1,6 +1,6 @@
 #include <sstream>
-#include </home/morgal/work/opencv/include/opencv2/opencv.hpp>
-#include </home/morgal/work/opencv_contrib/modules/face/include/opencv2/face.hpp>
+#include </home/tester/opencv/include/opencv2/opencv.hpp>
+#include </home/tester/opencv_contrib/modules/face/include/opencv2/face.hpp>
 
 using namespace cv;
 using namespace std;
@@ -135,19 +135,19 @@ bool Init()
 		return false;
 	}
 
-	if(!faceDetector.load("haarcascade_frontalface_alt_tree.xml"))
+	if(!faceDetector.load("/home/tester/opencv/data/haarcascades/haarcascade_frontalface_alt_tree.xml"))
 	{
 		cout << "No se encuentra el archivo haarcascade_frontalface_alt_tree.xml" << endl;
 		return false;
 	}
 
-	if(!lEyeDetector.load("haarcascade_eye_tree_eyeglasses.xml"))
+	if(!lEyeDetector.load("/home/tester/opencv/data/haarcascades/haarcascade_eye_tree_eyeglasses.xml"))
 	{
 		cout << "No se encuentra el archivo haarcascade_eye_tree_eyeglasses.xml" << endl;
 		return false;
 	}
 
-	if(!rEyeDetector.load("haarcascade_eye_tree_eyeglasses.xml"))
+	if(!rEyeDetector.load("/home/tester/opencv/data/haarcascades/haarcascade_eye_tree_eyeglasses.xml"))
 	{
 		cout << "No se encuentra el archivo haarcascade_eye_tree_eyeglasses.xml" << endl;
 		return false;
@@ -164,13 +164,17 @@ int main()
 	vector<int> ids;
 	map<int , string> names;
 
+	Mat lena = imread("lena.png");
+
 	bool entrenado = false;
 	bool agregarRostro = false;
 	bool entrenar = false;
+	bool input_rec = false;
 	int identificador = 0, capCount = 0;
 
-	string msg1 = "Reconocimiento Facial \n\n\t[E] Iniciar Entrenamiento \n\t[ESC] Salir\n";
+	string msg1 = "Reconocimiento Facial \n\n\t[E] Iniciar Entrenamiento \n\t[R] Reconocer imagen input \n\t[ESC] Salir\n";
 	string msg2 = "Reconocimiento Facial \n\n\t[A] Capturar Rostro \n\t[T] Finalizar Entrenamiento \n\t[ESC] Salir\n";
+	string msg3 = "Reconocimiento Facial \n\n\t[V] Volver \n";
 	cout << msg1;
 
 	bool correct = Init();
@@ -179,16 +183,29 @@ int main()
 	{
 		capture >> frame;
 
-		//Reducir el tamaño de la imagen para mejor rendimiento
-		float scale = frame.cols / (float) REDUCED_SIZE;
+		if(input_rec)
+		{
+			//Reducir el tamaño de la imagen para mejor rendimiento
+			float scale = lena.cols / (float) REDUCED_SIZE;
 
-		if (frame.cols > REDUCED_SIZE) {
-			int scaledHeight = cvRound(frame.rows / scale);
-			resize(frame, frame, Size(REDUCED_SIZE, scaledHeight));
+			if (lena.cols > REDUCED_SIZE) {
+				int scaledHeight = cvRound(lena.rows / scale);
+				resize(lena, lena, Size(REDUCED_SIZE, scaledHeight));
+			}
+
+			cvtColor(lena, copyFrame, CV_BGR2GRAY);
+		}else
+		{
+			//Reducir el tamaño de la imagen para mejor rendimiento
+			float scale = frame.cols / (float) REDUCED_SIZE;
+
+			if (frame.cols > REDUCED_SIZE) {
+				int scaledHeight = cvRound(frame.rows / scale);
+				resize(frame, frame, Size(REDUCED_SIZE, scaledHeight));
+			}
+
+			cvtColor(frame, copyFrame, CV_BGR2GRAY);
 		}
-
-		cvtColor(frame, copyFrame, CV_BGR2GRAY);
-
 		//Obtener las coordenadas del rostro y los ojos
 		Rect face, lEye, rEye;
 
@@ -224,7 +241,7 @@ int main()
 
 					cout << "\nNombre de la persona: ";
 					cin >> names[identificador];
-					system("cls");
+					system("clear");
 
 					entrenar = agregarRostro = entrenado = false;
 					rostros.clear();
@@ -252,17 +269,28 @@ int main()
 				if(id >= 0)
 				{
 					std::stringstream txt;
-txt << confidence;
-string msg = names[id] + " : " + txt.str();
+					txt << confidence;
+					string msg = names[id] + " : " + txt.str();
 
-					DrawMarker(frame, face, msg , 20);
+					if(input_rec) DrawMarker(lena, face, msg , 20);
+					else DrawMarker(frame, face, msg , 20);
 				} 
-				else DrawMarker(frame, face, "???", 20);
+				else 
+				{
+					if(input_rec) DrawMarker(lena, face, "???", 20);
+					else DrawMarker(frame, face, "???", 20);
+				}
 			}
-			else DrawMarker(frame, face, "???", 20);
+			else 
+				{
+					if(input_rec) DrawMarker(lena, face, "???", 20);
+					else DrawMarker(frame, face, "???", 20);
+				}
 		}
 
-		imshow("Reconocimiento de rostros", frame);
+		if(input_rec) imshow("input", lena);
+		else imshow("Reconocimiento de rostros", frame);
+		
 
 		switch (waitKey(30))
 		{
@@ -277,8 +305,21 @@ string msg = names[id] + " : " + txt.str();
 		case 'E':
 		case 'e': 
 			entrenado = true;
-			system("cls");
+			system("clear");
 			cout << msg2 << endl;
+			break;
+		case 'R':
+		case 'r':
+			input_rec = true;
+			system("clear");
+			cout << msg3 << endl;
+			break;
+		case 'V':
+		case 'v':
+			input_rec = false;
+			cvDestroyWindow("input");
+			system("clear");
+			cout << msg1 << endl;
 			break;
 		case 27:
 			return 0;

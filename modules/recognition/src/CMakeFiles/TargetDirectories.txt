@@ -1,3 +1,0 @@
-/home/morgal/work/1984/modules/recognition/src/CMakeFiles/rebuild_cache.dir
-/home/morgal/work/1984/modules/recognition/src/CMakeFiles/edit_cache.dir
-/home/morgal/work/1984/modules/recognition/src/CMakeFiles/reconocimiento_facial.dir
