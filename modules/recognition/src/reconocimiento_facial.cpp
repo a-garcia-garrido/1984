@@ -1,6 +1,6 @@
 #include <sstream>
-#include </home/tester/opencv/include/opencv2/opencv.hpp>
-#include </home/tester/opencv_contrib/modules/face/include/opencv2/face.hpp>
+#include </home/morgal/work/opencv/include/opencv2/opencv.hpp>
+#include </home/morgal/work/opencv_contrib/modules/face/include/opencv2/face.hpp>
 
 using namespace cv;
 using namespace std;
@@ -25,7 +25,7 @@ int FaceHeight = 100;
 int REDUCED_SIZE = 480;
 
 //Obtiene las coordenas de los ojos y el rostro, devuelve true si las encuentra
-bool GetFaceAndEyes(Mat& frame, Rect& rostro, Rect& lEye, Rect& rEye)
+bool ReconoceOjos(Mat& frame, Rect& rostro, Rect& lEye, Rect& rEye)
 {
 	vector<Rect> faces;
 	faceDetector.detectMultiScale(frame, faces, 1.1, 3, CASCADE_FIND_BIGGEST_OBJECT | CASCADE_DO_ROUGH_SEARCH);
@@ -68,7 +68,7 @@ bool GetFaceAndEyes(Mat& frame, Rect& rostro, Rect& lEye, Rect& rEye)
 }
 
 //Alinea y recorta el rostro
-void CropFace(const Mat& face, Mat& warped, Rect leftEye, Rect rightEye)
+void RecortaCara(const Mat& face, Mat& warped, Rect leftEye, Rect rightEye)
 {
 	Point left = Point(leftEye.x + leftEye.width/2, leftEye.y + leftEye.height/2);
 	Point right = Point(rightEye.x + rightEye.width/2, rightEye.y + rightEye.height/2);
@@ -100,7 +100,7 @@ void CropFace(const Mat& face, Mat& warped, Rect leftEye, Rect rightEye)
 }
 
 //Dibuja las marcas para resaltar el rostro encontrado
-void DrawMarker(Mat& dst, Rect rect, string msg, int LINE_WIDTH)
+void DibujaCuadro(Mat& dst, Rect rect, string msg, int LINE_WIDTH)
 {
 	Rect r = rect;
 	Scalar DETECT_COLOR = CV_RGB(0,255,0);
@@ -162,7 +162,7 @@ int main()
 	Ptr<face::FaceRecognizer> model = face::createLBPHFaceRecognizer();
 	vector<Mat> rostros;
 	vector<int> ids;
-	map<int , string> names;
+	map<int , string> nombres;
 
 	Mat lena = imread("lena.png");
 
@@ -177,9 +177,9 @@ int main()
 	string msg3 = "Reconocimiento Facial \n\n\t[V] Volver \n";
 	cout << msg1;
 
-	bool correct = Init();
+	bool correcto = Init();
 
-	while (correct)
+	while (correcto)
 	{
 		capture >> frame;
 
@@ -209,13 +209,13 @@ int main()
 		//Obtener las coordenadas del rostro y los ojos
 		Rect face, lEye, rEye;
 
-		if(GetFaceAndEyes(copyFrame, face, lEye, rEye))
+		if(ReconoceOjos(copyFrame, face, lEye, rEye))
 		{
 			//si el modo entrenamiento esta activo
 			if(entrenado)
 			{
 				Mat nface;
-				CropFace(copyFrame(face), nface, lEye, rEye);
+				RecortaCara(copyFrame(face), nface, lEye, rEye);
 
 				//Agregar el rostro y su numero id a las correspondientes listas
 				if(agregarRostro)
@@ -240,7 +240,7 @@ int main()
 					model->update(rostros, ids);
 
 					cout << "\nNombre de la persona: ";
-					cin >> names[identificador];
+					cin >> nombres[identificador];
 					system("clear");
 
 					entrenar = agregarRostro = entrenado = false;
@@ -259,7 +259,7 @@ int main()
 				double confidence = 0.0;
 
 				Mat nface;
-				CropFace(copyFrame(face), nface, lEye, rEye);
+				RecortaCara(copyFrame(face), nface, lEye, rEye);
 
 				//calquier confidence mayor que threshold id = -1
 				//redicir o aumentar este valor segun nos convenga
@@ -270,21 +270,21 @@ int main()
 				{
 					std::stringstream txt;
 					txt << confidence;
-					string msg = names[id] + " : " + txt.str();
+					string msg = nombres[id] + " : " + txt.str();
 
-					if(input_rec) DrawMarker(lena, face, msg , 20);
-					else DrawMarker(frame, face, msg , 20);
+					if(input_rec) DibujaCuadro(lena, face, msg , 20);
+					else DibujaCuadro(frame, face, msg , 20);
 				} 
 				else 
 				{
-					if(input_rec) DrawMarker(lena, face, "???", 20);
-					else DrawMarker(frame, face, "???", 20);
+					if(input_rec) DibujaCuadro(lena, face, "???", 20);
+					else DibujaCuadro(frame, face, "???", 20);
 				}
 			}
 			else 
 				{
-					if(input_rec) DrawMarker(lena, face, "???", 20);
-					else DrawMarker(frame, face, "???", 20);
+					if(input_rec) DibujaCuadro(lena, face, "???", 20);
+					else DibujaCuadro(frame, face, "???", 20);
 				}
 		}
 
@@ -326,7 +326,7 @@ int main()
 		}
 	}
 
-	system("pause");
+	system("pausa");
 
 	return 0;
 }
