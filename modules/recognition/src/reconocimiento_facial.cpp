@@ -74,23 +74,23 @@ void RecortaCara(const Mat& face, Mat& warped, Rect leftEye, Rect rightEye)
 	Point right = Point(rightEye.x + rightEye.width/2, rightEye.y + rightEye.height/2);
 	Point2f eyesCenter = Point2f( (left.x + right.x) * 0.5f, (left.y + right.y) * 0.5f );
 
-	// Get the angle between the 2 eyes.
+	// Obtiene el ángulo entre los dos ojos
 	double dy = (right.y - left.y);
 	double dx = (right.x - left.x);
 	double len = sqrt(dx*dx + dy*dy);
 	double angle = atan2(dy, dx) * 180.0 / CV_PI;
 
-	// Hand measurements shown that the left eye center should ideally be at roughly (0.19, 0.14) of a scaled face image.
+	// Le decimos que, en una imagen escalada, la posición ideal para el ojo derecho debe ser (0.19, 0.14) 
 	const double DESIRED_RIGHT_EYE_X = (1.0f - DESIRED_LEFT_EYE_X);
 
-	// Get the amount we need to scale the image to be the desired fixed size we want.
+	//Obtiene la cantidad de escalado que debemos aplicar a la imagen para que sea del tamaño que deseamos
 	double desiredLen = (DESIRED_RIGHT_EYE_X - DESIRED_LEFT_EYE_X) * FaceWidth;
 	double scale = desiredLen / len;
 
-	// Get the transformation matrix for rotating and scaling the face to the desired angle & size.
+	// Obtiene la matriz necesaria para rotar y escalar la cara de la imagen hasta el ángulo y tamaño deseado
 	Mat rot_mat = getRotationMatrix2D(eyesCenter, angle, scale);
 
-	// Shift the center of the eyes to be the desired center between the eyes.
+	// Cambia el centro de los ojos al que nosotros queremos
 	rot_mat.at<double>(0, 2) += FaceWidth * 0.5f - eyesCenter.x;
 	rot_mat.at<double>(1, 2) += FaceHeight * DESIRED_LEFT_EYE_Y - eyesCenter.y;
 
@@ -261,8 +261,8 @@ int main()
 				Mat nface;
 				RecortaCara(copyFrame(face), nface, lEye, rEye);
 
-				//calquier confidence mayor que threshold id = -1
-				//redicir o aumentar este valor segun nos convenga
+				//cualquier confidence mayor que threshold id = -1
+				//reducir o aumentar este valor segun nos convenga
 				model->setThreshold(70);
 				model->predict(nface, id, confidence);
 
