@@ -256,20 +256,20 @@ int main()
 			if(identificador >= 1)
 			{
 				int id = -1;
-				double confidence = 0.0;
+				double precision = 0.0;
 
 				Mat nface;
 				RecortaCara(copyFrame(face), nface, lEye, rEye);
 
-				//cualquier confidence mayor que threshold id = -1
+				//cualquier precision mayor que threshold id = -1
 				//reducir o aumentar este valor segun nos convenga
 				model->setThreshold(70);
-				model->predict(nface, id, confidence);
+				model->predict(nface, id, precision);
 
 				if(id >= 0)
 				{
 					std::stringstream txt;
-					txt << confidence;
+					txt << precision;
 					string msg = nombres[id] + " : " + txt.str();
 
 					if(input_rec) DibujaCuadro(lena, face, msg , 20);
