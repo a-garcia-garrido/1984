@@ -1,7 +1,8 @@
 
 <?php
-$target_dir = "/var/www/html/images/";
-$target_file = $target_dir . basename($_FILES["fichero"]["name"]);
+$target_dir = "/var/www/html/login_register/images/";
+$target_file = $target_dir . $_FILES["fichero"]["name"];
+echo $target_file;
 $uploadOk = 1;
 $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
 //Check if image file is a actual image or fake image
