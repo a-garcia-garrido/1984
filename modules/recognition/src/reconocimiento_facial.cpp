@@ -1,6 +1,6 @@
 #include <sstream>
-#include </home/morgal/work/opencv/include/opencv2/opencv.hpp>
-#include </home/morgal/work/opencv_contrib/modules/face/include/opencv2/face.hpp>
+#include </home/pc03/work/opencv/include/opencv2/opencv.hpp>
+#include </home/pc03/work/opencv_contrib/modules/face/include/opencv2/face.hpp>
 
 using namespace cv;
 using namespace std;
@@ -17,7 +17,7 @@ float EYE_SW = 0.37f;
 float EYE_SH = 0.36f;
 
 double DESIRED_LEFT_EYE_Y = 0.14;
-double DESIRED_LEFT_EYE_X = 0.19;  
+double DESIRED_LEFT_EYE_X = 0.19;
 
 int FaceWidth = 100;
 int FaceHeight = 100;
@@ -74,20 +74,20 @@ void RecortaCara(const Mat& face, Mat& warped, Rect leftEye, Rect rightEye)
 	Point right = Point(rightEye.x + rightEye.width/2, rightEye.y + rightEye.height/2);
 	Point2f eyesCenter = Point2f( (left.x + right.x) * 0.5f, (left.y + right.y) * 0.5f );
 
-	// Obtiene el ángulo entre los dos ojos
+	// Obtiene el ï¿½ngulo entre los dos ojos
 	double dy = (right.y - left.y);
 	double dx = (right.x - left.x);
 	double len = sqrt(dx*dx + dy*dy);
 	double angle = atan2(dy, dx) * 180.0 / CV_PI;
 
-	// Le decimos que, en una imagen escalada, la posición ideal para el ojo derecho debe ser (0.19, 0.14) 
+	// Le decimos que, en una imagen escalada, la posiciï¿½n ideal para el ojo derecho debe ser (0.19, 0.14)
 	const double DESIRED_RIGHT_EYE_X = (1.0f - DESIRED_LEFT_EYE_X);
 
-	//Obtiene la cantidad de escalado que debemos aplicar a la imagen para que sea del tamaño que deseamos
+	//Obtiene la cantidad de escalado que debemos aplicar a la imagen para que sea del tamaï¿½o que deseamos
 	double desiredLen = (DESIRED_RIGHT_EYE_X - DESIRED_LEFT_EYE_X) * FaceWidth;
 	double scale = desiredLen / len;
 
-	// Obtiene la matriz necesaria para rotar y escalar la cara de la imagen hasta el ángulo y tamaño deseado
+	// Obtiene la matriz necesaria para rotar y escalar la cara de la imagen hasta el ï¿½ngulo y tamaï¿½o deseado
 	Mat rot_mat = getRotationMatrix2D(eyesCenter, angle, scale);
 
 	// Cambia el centro de los ojos al que nosotros queremos
@@ -156,21 +156,28 @@ bool Init()
 	return true;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
 	Mat frame, copyFrame;
 	Ptr<face::FaceRecognizer> model = face::createLBPHFaceRecognizer();
 	vector<Mat> rostros;
 	vector<int> ids;
 	map<int , string> nombres;
-
-	Mat lena = imread("lena.png");
+	string entrada_imagen;
 
 	bool entrenado = false;
 	bool agregarRostro = false;
 	bool entrenar = false;
 	bool input_rec = false;
 	int identificador = 0, capCount = 0;
+
+	// if(input_rec)
+	// {
+		// cin >> entrada_imagen;
+		// scanf ("%s", entrada_imagen);
+		// Mat lena = imread(entrada_imagen);
+		Mat lena = imread("lena.png");
+	// }
 
 	string msg1 = "Reconocimiento Facial \n\n\t[E] Iniciar Entrenamiento \n\t[R] Reconocer imagen input \n\t[ESC] Salir\n";
 	string msg2 = "Reconocimiento Facial \n\n\t[A] Capturar Rostro \n\t[T] Finalizar Entrenamiento \n\t[ESC] Salir\n";
@@ -185,7 +192,7 @@ int main()
 
 		if(input_rec)
 		{
-			//Reducir el tamaño de la imagen para mejor rendimiento
+			//Reducir el tamaï¿½o de la imagen para mejor rendimiento
 			float scale = lena.cols / (float) REDUCED_SIZE;
 
 			if (lena.cols > REDUCED_SIZE) {
@@ -196,7 +203,7 @@ int main()
 			cvtColor(lena, copyFrame, CV_BGR2GRAY);
 		}else
 		{
-			//Reducir el tamaño de la imagen para mejor rendimiento
+			//Reducir el tamaï¿½o de la imagen para mejor rendimiento
 			float scale = frame.cols / (float) REDUCED_SIZE;
 
 			if (frame.cols > REDUCED_SIZE) {
@@ -231,7 +238,7 @@ int main()
 					agregarRostro = false;
 
 					capCount += 1;
-					cout << "Se han capturado " << capCount << " Rostros" << endl; 
+					cout << "Se han capturado " << capCount << " Rostros" << endl;
 				}
 
 				//entrenar el modelo con los rostros capturados
@@ -274,14 +281,14 @@ int main()
 
 					if(input_rec) DibujaCuadro(lena, face, msg , 20);
 					else DibujaCuadro(frame, face, msg , 20);
-				} 
-				else 
+				}
+				else
 				{
 					if(input_rec) DibujaCuadro(lena, face, "???", 20);
 					else DibujaCuadro(frame, face, "???", 20);
 				}
 			}
-			else 
+			else
 				{
 					if(input_rec) DibujaCuadro(lena, face, "???", 20);
 					else DibujaCuadro(frame, face, "???", 20);
@@ -290,7 +297,7 @@ int main()
 
 		if(input_rec) imshow("input", lena);
 		else imshow("Reconocimiento de rostros", frame);
-		
+
 
 		switch (waitKey(30))
 		{
@@ -303,7 +310,7 @@ int main()
 			agregarRostro = entrenado;
 			break;
 		case 'E':
-		case 'e': 
+		case 'e':
 			entrenado = true;
 			system("clear");
 			cout << msg2 << endl;
