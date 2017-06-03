@@ -8,8 +8,6 @@
 #include <signal.h>
 #include <sys/wait.h>
 
-#include "image_file.h"
-
 #define PORT 3550
 #define BACKLOG 2
 #define MAXBUFF 0x100000
@@ -31,7 +29,7 @@ handle(int connection, const char * filename) {
     size_t size = 0;
     ssize_t bytes_read;
     FILE *pf = NULL; /*writable file*/
-    insigned total;
+    unsigned total;
 
     FILE *socket = fdopen(connection, "r"); /* Make fscanf available from the socket*/
     fscanf(socket, " %u", &total);

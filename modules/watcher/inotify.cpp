@@ -6,55 +6,97 @@
 #include <unistd.h>
 #include <string.h>
 #include <iostream>
-
-#include "detector.h"
+#include <limits.h>
 
 using namespace std;
 
 #define EVENT_SIZE  ( sizeof (struct inotify_event) )
 #define BUF_LEN     ( 1024 * ( EVENT_SIZE + 16 ) )
 
-char *detector()
-{
-  int length, i = 0;
-  int fd;
-  int wd;
-  char buffer[BUF_LEN];
-  struct inotify_event *event;
-  char *name = NULL;
+bool filter_image(char *name){
 
-  fd = inotify_init();
+}
 
-  if (fd < 0){
-    perror("inotify_init");
+bool filter_video(char * name){
+
+}
+
+void filter_pass(char *name){
+
+  bool pass = false;
+  char *pathnew = "test/";
+  char *pathold = "wached/";
+  strcat(pathold, name);
+  strcat(pathnew, name);
+  const char *oldname = pathold;
+  const char *newname = pathnew;
+
+  if(filter_image(name)){
+    int rename(const char *oldname, const char *newname);
+    pass = true;
   }
-
-  wd = inotify_add_watch(fd, "/home/victor/work/1984/modules/watcher/watched",
-                         IN_CREATE);
-  length = read(fd, buffer, BUF_LEN);
-
-  if (length < 0) {
-    perror("read");
+  if(filter_video(name)){
+    int rename(const char *oldname, const char *newname);
+    pass = true;
   }
+  if((pass = false)){
+    int remove(const char *oldname);
+  }
+}
 
-  while (i < length) {
-    inotify_event *event = (struct inotify_event *) &buffer[i];
-    if (event->len) {
-      if (event->mask & IN_CREATE) {
-          printf("The file %s was created.\n", event->name);
-          printf("1\n");
-          name = event->name;
+int
+main(int argc, char *argv[])
+ {
+     int inotifyFd, wd;
+     //int j;
+     char buf[BUF_LEN] __attribute__ ((aligned(8)));
+     ssize_t numRead;
+     char *p;
+     struct inotify_event *event;
+
+     //if (argc < 2 || strcmp(argv[1], "--help") == 0){
+         //fprintf(stderr, "%s pathname...\n", argv[0]);
+         //exit(1);
+     //}
+
+     inotifyFd = inotify_init();                 /* Create inotify instance */
+     if (inotifyFd == -1){
+         fprintf(stderr, "inotify init failure\n");
+         abort();
+     }
+
+/* For each command-line argument, add a watch for all events */
+     //for (j = 1; j < argc; j++) {
+     wd = inotify_add_watch(inotifyFd, "/home/victor/work/1984/modules/watcher/watched", IN_CREATE);
+       if (wd == -1){
+         fprintf(stderr, "inotify watch failure\n");
+         abort();
+       }
+
+         //printf("Watching %s using wd %d\n", argv[j], wd);
+     //}
+
+     while(1){                                  /* Read events forever */
+         numRead = read(inotifyFd, buf, BUF_LEN);
+
+         if (numRead == -1){
+             fprintf(stderr, "read failure\n");
+             abort();
+         }
+        else
+        {
+          for(p = buf; p < buf + numRead;){
+            event = (struct inotify_event *) p;
+            if(event->len){
+              if(event->mask & IN_CREATE){
+                printf("New directory %s created.\n", event->name);
+                filter_pass(event->name);
+              }
+            p += sizeof(struct inotify_event) + event->len;
+            }
+          }
         }
       }
-      printf("2\n");
-    i += EVENT_SIZE + event->len;
-  }
 
-  printf("3\n");
-  inotify_rm_watch( fd, wd );
-  printf("4\n");
-  close( fd );
-  printf("5\n");
-
-  return name;
-}
+     exit(EXIT_SUCCESS);
+ }

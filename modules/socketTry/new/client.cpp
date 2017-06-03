@@ -19,7 +19,7 @@ int send_image(int socket){
   char send_buffer[10240], read_buffer[256];
   packet_index = 1;
 
-  picture = fopen("water.png", "r");
+  picture = fopen("mini.jpg", "r");
   printf("Getting Picture Size\n");
 
   if(picture == NULL) {
@@ -37,7 +37,7 @@ int send_image(int socket){
     //Send Picture as Byte Array
     printf("Sending Picture as Byte Array\n");
 
-    do {
+    do { //Read while we get errors that are due to signals.
       stat=read(socket, &read_buffer , 255);
       printf("Bytes read: %i\n",stat);
     } while (stat < 0);
@@ -68,39 +68,39 @@ int send_image(int socket){
     }
   }
 
-  int main(int argc , char *argv[])
-  {
+    int main(int argc , char *argv[])
+    {
 
-    int socket_desc;
-    struct sockaddr_in server;
-    char *parray;
+      int socket_desc;
+      struct sockaddr_in server;
+      char *parray;
 
 
-    //Create socket
-    socket_desc = socket(AF_INET , SOCK_STREAM , 0);
+      //Create socket
+      socket_desc = socket(AF_INET , SOCK_STREAM , 0);
 
-    if (socket_desc == -1) {
-      printf("Could not create socket");
-    }
+      if (socket_desc == -1) {
+        printf("Could not create socket");
+      }
 
-    memset(&server,0,sizeof(server));
-    server.sin_addr.s_addr = inet_addr("127.0.0.1");
-    server.sin_family = AF_INET;
-    server.sin_port = htons( 8889 );
+      memset(&server,0,sizeof(server));
+      server.sin_addr.s_addr = inet_addr("127.0.0.1");
+      server.sin_family = AF_INET;
+      server.sin_port = htons( 8889 );
 
-    //Connect to remote server
-    if (connect(socket_desc , (struct sockaddr *)&server , sizeof(server)) < 0) {
-      cout<<strerror(errno);
+      //Connect to remote server
+      if (connect(socket_desc , (struct sockaddr *)&server , sizeof(server)) < 0) {
+        cout<<strerror(errno);
+        close(socket_desc);
+        puts("Connect Error");
+        return 1;
+      }
+
+      puts("Connected\n");
+
+      send_image(socket_desc);
+
       close(socket_desc);
-      puts("Connect Error");
-      return 1;
+
+      return 0;
     }
-
-    puts("Connected\n");
-
-    send_image(socket_desc);
-
-    close(socket_desc);
-
-    return 0;
-  }
