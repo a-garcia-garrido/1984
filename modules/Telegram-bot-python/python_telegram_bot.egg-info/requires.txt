@@ -1,0 +1,8 @@
+future>=0.15.2
+certifi
+
+[json]
+ujson
+
+[socks]
+PySocks
