@@ -67,7 +67,7 @@ main(int argc, char *argv[])
 
 /* For each command-line argument, add a watch for all events */
      //for (j = 1; j < argc; j++) {
-     wd = inotify_add_watch(inotifyFd, "/home/victor/work/1984/modules/watcher/watched", IN_CREATE);
+     wd = inotify_add_watch(inotifyFd, "./watcher/watched", IN_CREATE);
        if (wd == -1){
          fprintf(stderr, "inotify watch failure\n");
          abort();
