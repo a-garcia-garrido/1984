@@ -1,8 +1,7 @@
-
 <?php
-$target_dir = "/var/www/html/login_register/images/";
-$target_file = $target_dir . $_FILES["fichero"]["name"];
-echo $target_file;
+$name_txt = "/home/tester/1984/modules/recognition/src/name.txt";
+$target_dir = "images/";
+$target_file = $target_dir . basename($_FILES["fichero"]["name"]);
 $uploadOk = 1;
 $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
 //Check if image file is a actual image or fake image
@@ -15,12 +14,17 @@ if(isset($_POST["submit"])) {
         echo "File is not an image.";
         $uploadOk = 0;
     }
+} else{
+    echo "No way ... ";
 }
+
+$fileBefore = filemtime($name_txt);
+
 // Check if file already exists
-if (file_exists($target_file)) {
+/*if (file_exists($target_file)) {
     echo "Sorry, file already exists.";
     $uploadOk = 0;
-}
+}*/
 // Check file size
 if ($_FILES["fichero"]["size"] > 500000) {
     echo "Sorry, your file is too large.";
@@ -38,10 +42,18 @@ if ($uploadOk == 0) {
 // if everything is ok, try to upload file
 } else {
     if (move_uploaded_file($_FILES["fichero"]["tmp_name"], $target_file)) {
-        header("Location: news.php");
+        //header("Location: news.php");
+
+        do{
+            clearstatcache();
+            sleep(3);
+            $fileAfter = filemtime($name_txt);
+        }while($fileAfter == $fileBefore);
+
+        header("Location: resultado.php");
+
     } else {
-        echo "Sorry, there was an error uploading your file.";
+        echo "Sorry, there was an error uploading your file.<br><br>". $_FILES["fichero"]["tmp_name"] . " ----> " . $target_file;
     }
 }
-
 ?>
