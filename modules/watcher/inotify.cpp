@@ -12,91 +12,199 @@ using namespace std;
 
 #define EVENT_SIZE  ( sizeof (struct inotify_event) )
 #define BUF_LEN     ( 1024 * ( EVENT_SIZE + 16 ) )
+#define MAX 0x1000
 
 bool filter_image(char *name){
+  const char *before = "file test/";
+  const char *after = " | grep \"image data\" > /dev/null";
+  char *command;
+  int rv = 0;
 
+  if((command = (char*)malloc(strlen(before)+strlen(after)+strlen(name)+1)) != NULL){
+    command[0] = '\0';
+    strcat(command, before);
+    strcat(command, name);
+    strcat(command, after);
+    strcat(command, "\0");
+  } else {
+    fprintf(stderr,"malloc newname failed!\n");
+  }
+
+  FILE *pc = popen (command, "w");
+
+  rv = pclose(pc);
+
+  //printf("%i\n", rv);
+
+  free(name);
+  free(command);
+
+  if (rv == 0) {
+    return true;
+  }
+
+  return false;
 }
 
 bool filter_video(char * name){
+  const char *before = "file test/";
+  const char *after = " | grep \"ISO Media\" > /dev/null";
+  char *command;
+  int rv = 0;
 
+  if((command = (char*)malloc(strlen(before)+strlen(after)+strlen(name)+1)) != NULL){
+    command[0] = '\0';
+    strcat(command, before);
+    strcat(command, name);
+    strcat(command, after);
+    strcat(command, "\0");
+  } else {
+    fprintf(stderr,"malloc newname failed!\n");
+  }
+
+  FILE *pc = popen (command, "w");
+
+  rv = pclose(pc);
+
+  //printf("%i\n", rv);
+  free(command);
+
+  if (rv == 0) {
+    return true;
+  }
+
+  return false;
 }
 
 void filter_pass(char *name){
 
   bool pass = false;
-  char *pathnew = "test/";
-  char *pathold = "wached/";
-  strcat(pathold, name);
-  strcat(pathnew, name);
-  const char *oldname = pathold;
-  const char *newname = pathnew;
+  const char *newdir = "test/";
+  const char *olddir = "watched/";
+  char *newname;
+  char *oldname;
 
   if(filter_image(name)){
-    int rename(const char *oldname, const char *newname);
+    if((newname = (char*)malloc(strlen(newdir)+strlen(name)+1)) != NULL){
+      newname[0] = '\0';
+      strcat(newname, newdir);
+      strcat(newname, name);
+      strcat(newname, "\0");
+    } else {
+      fprintf(stderr,"malloc newname failed!\n");
+    }
+
+    if((oldname = (char*)malloc(strlen(olddir)+strlen(name)+1)) != NULL){
+      oldname[0] = '\0';
+      strcat(oldname, olddir);
+      strcat(oldname, name);
+    } else {
+      fprintf(stderr,"malloc oldname failed!\n");
+    }
+    rename(oldname, newname);
     pass = true;
   }
   if(filter_video(name)){
-    int rename(const char *oldname, const char *newname);
-    pass = true;
+    const char *before = "ffmpeg -i ";
+    const char *after = " -r 2 -ss 00:00:00 ";
+    const char *extension = "-%3d.png > /dev/null";
+    char *command;
+    char * finalname = (char *)malloc(MAX);
+
+    printf("Escribe el nombre del fichero\n");
+    fgets(name, MAX, stdin);
+
+    strtok(name, "\n");
+
+    strcpy(finalname, name);
+
+    strtok(finalname, ".");
+
+    if((command = (char*)malloc(strlen(before)+strlen(after)+strlen(name)+ strlen(finalname)+strlen(extension)+1)) != NULL){
+      command[0] = '\0';
+      strcat(command, before);
+      strcat(command, name);
+      strcat(command, after);
+      strcat(command, finalname);
+      strcat(command, extension);
+      strcat(command, "\0");
+    } else {
+      fprintf(stderr,"malloc newname failed!\n");
+    }
+
+    printf("%s\n", command);
+
+    FILE *pc = popen (command, "w");
+    pclose(pc);
+    free(finalname);
+    free(command);
+    pass = false;
   }
-  if((pass = false)){
+  if((pass == false)){
+    if((oldname = (char*)malloc(strlen(olddir)+strlen(name)+1)) != NULL){
+      oldname[0] = '\0';
+      strcat(oldname, olddir);
+      strcat(oldname, name);
+    } else {
+      fprintf(stderr,"malloc oldname failed!\n");
+    }
     int remove(const char *oldname);
   }
 }
 
 int
 main(int argc, char *argv[])
- {
-     int inotifyFd, wd;
-     //int j;
-     char buf[BUF_LEN] __attribute__ ((aligned(8)));
-     ssize_t numRead;
-     char *p;
-     struct inotify_event *event;
+{
+  int inotifyFd, wd;
+  //int j;
+  char buf[BUF_LEN] __attribute__ ((aligned(8)));
+  ssize_t numRead;
+  char *p;
+  struct inotify_event *event;
 
-     //if (argc < 2 || strcmp(argv[1], "--help") == 0){
-         //fprintf(stderr, "%s pathname...\n", argv[0]);
-         //exit(1);
-     //}
+  //if (argc < 2 || strcmp(argv[1], "--help") == 0){
+  //fprintf(stderr, "%s pathname...\n", argv[0]);
+  //exit(1);
+  //}
 
-     inotifyFd = inotify_init();                 /* Create inotify instance */
-     if (inotifyFd == -1){
-         fprintf(stderr, "inotify init failure\n");
-         abort();
-     }
+  inotifyFd = inotify_init();                 /* Create inotify instance */
+  if (inotifyFd == -1){
+    fprintf(stderr, "inotify init failure\n");
+    abort();
+  }
 
-/* For each command-line argument, add a watch for all events */
-     //for (j = 1; j < argc; j++) {
-     wd = inotify_add_watch(inotifyFd, "./watcher/watched", IN_CREATE);
-       if (wd == -1){
-         fprintf(stderr, "inotify watch failure\n");
-         abort();
-       }
+  /* For each command-line argument, add a watch for all events */
+  //for (j = 1; j < argc; j++) {
+  wd = inotify_add_watch(inotifyFd, "./watcher/watched", IN_CREATE);
+  if (wd == -1){
+    fprintf(stderr, "inotify watch failure\n");
+    abort();
+  }
 
-         //printf("Watching %s using wd %d\n", argv[j], wd);
-     //}
+  //printf("Watching %s using wd %d\n", argv[j], wd);
+  //}
 
-     while(1){                                  /* Read events forever */
-         numRead = read(inotifyFd, buf, BUF_LEN);
+  while(1){                                  /* Read events forever */
+    numRead = read(inotifyFd, buf, BUF_LEN);
 
-         if (numRead == -1){
-             fprintf(stderr, "read failure\n");
-             abort();
-         }
-        else
-        {
-          for(p = buf; p < buf + numRead;){
-            event = (struct inotify_event *) p;
-            if(event->len){
-              if(event->mask & IN_CREATE){
-                printf("New directory %s created.\n", event->name);
-                filter_pass(event->name);
-              }
-            p += sizeof(struct inotify_event) + event->len;
-            }
+    if (numRead == -1){
+      fprintf(stderr, "read failure\n");
+      abort();
+    }
+    else
+    {
+      for(p = buf; p < buf + numRead;){
+        event = (struct inotify_event *) p;
+        if(event->len){
+          if(event->mask & IN_CREATE){
+            printf("New directory %s created.\n", event->name);
+            filter_pass(event->name);
           }
+          p += sizeof(struct inotify_event) + event->len;
         }
       }
+    }
+  }
 
-     exit(EXIT_SUCCESS);
- }
+  exit(EXIT_SUCCESS);
+}

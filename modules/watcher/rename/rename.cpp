@@ -17,7 +17,7 @@ int main(int argc, char const *argv[]) {
   strtok(name, "\n");
 
   if((newname = (char*)malloc(strlen(newdir)+strlen(name)+1)) != NULL){
-    newname[0] = '\0';   // ensures the memory is an empty string
+    newname[0] = '\0';
     strcat(newname, newdir);
     strcat(newname, name);
     strcat(newname, "\0");
@@ -26,9 +26,9 @@ int main(int argc, char const *argv[]) {
   }
 
   if((oldname = (char*)malloc(strlen(olddir)+strlen(name)+1)) != NULL){
-    oldname[0] = '\0';   // ensures the memory is an empty string
-    strcat(newname, newdir);
-    strcat(newname, name);
+    oldname[0] = '\0';
+    strcat(oldname, olddir);
+    strcat(oldname, name);
   } else {
     fprintf(stderr,"malloc oldname failed!\n");
   }
@@ -38,6 +38,6 @@ int main(int argc, char const *argv[]) {
 
   rename(oldname, newname);
 
-  //free(result);
+
   return 0;
 }
