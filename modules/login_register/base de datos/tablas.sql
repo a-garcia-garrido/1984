@@ -21,4 +21,4 @@ CREATE TABLE respuestas(
   fechaPublica DATETIME,
   autor varchar(20),
   CONSTRAINT fk_ComentarioRespuestas FOREIGN KEY (id_pdr) REFERENCES comentario (id_com)
-)
+);

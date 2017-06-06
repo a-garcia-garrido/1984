@@ -1,6 +1,6 @@
 #include <sstream>
-#include </home/pc03/work/opencv/include/opencv2/opencv.hpp>
-#include </home/pc03/work/opencv_contrib/modules/face/include/opencv2/face.hpp>
+#include </home/tester/opencv/include/opencv2/opencv.hpp>
+#include </home/tester/opencv_contrib/modules/face/include/opencv2/face.hpp>
 
 using namespace cv;
 using namespace std;
@@ -164,35 +164,42 @@ int main(int argc, char* argv[])
 	vector<int> ids;
 	map<int , string> nombres;
 	string entrada_imagen;
+	ofstream archivoNombre;	//archivo donde escribe el nombre de la imagen input
 
 	bool entrenado = false;
 	bool agregarRostro = false;
 	bool entrenar = false;
 	bool input_rec = false;
+	bool input_name = false;
+	bool devolver_nombre = false;
 	int identificador = 0, capCount = 0;
-
-	// if(input_rec)
-	// {
-		// cin >> entrada_imagen;
-		// scanf ("%s", entrada_imagen);
-		// Mat lena = imread(entrada_imagen);
-		Mat lena = imread("lena.png");
-	// }
+	Mat lena = imread("lena.png");
 
 	string msg1 = "Reconocimiento Facial \n\n\t[E] Iniciar Entrenamiento \n\t[R] Reconocer imagen input \n\t[ESC] Salir\n";
 	string msg2 = "Reconocimiento Facial \n\n\t[A] Capturar Rostro \n\t[T] Finalizar Entrenamiento \n\t[ESC] Salir\n";
-	string msg3 = "Reconocimiento Facial \n\n\t[V] Volver \n";
+	string msg3 = "Reconocimiento Facial \n\n\t[M] Mandar nombre de persona reconocida \n\t[V] Volver\n";
 	cout << msg1;
 
 	bool correcto = Init();
 
 	while (correcto)
 	{
-		capture >> frame;
+		if(input_rec)
+		{
+			if(!input_name && input_rec){
+				cout << "\nNombre de la foto: ";
+				cin >> entrada_imagen;
+
+				lena = imread(entrada_imagen);
+
+				input_name = true;
+			}
+		}else
+			capture >> frame;
 
 		if(input_rec)
 		{
-			//Reducir el tama�o de la imagen para mejor rendimiento
+			//Reducir el tamanio de la imagen para mejor rendimiento
 			float scale = lena.cols / (float) REDUCED_SIZE;
 
 			if (lena.cols > REDUCED_SIZE) {
@@ -203,7 +210,7 @@ int main(int argc, char* argv[])
 			cvtColor(lena, copyFrame, CV_BGR2GRAY);
 		}else
 		{
-			//Reducir el tama�o de la imagen para mejor rendimiento
+			//Reducir el tamanio de la imagen para mejor rendimiento
 			float scale = frame.cols / (float) REDUCED_SIZE;
 
 			if (frame.cols > REDUCED_SIZE) {
@@ -270,7 +277,7 @@ int main(int argc, char* argv[])
 
 				//cualquier precision mayor que threshold id = -1
 				//reducir o aumentar este valor segun nos convenga
-				model->setThreshold(70);
+				model->setThreshold(100);
 				model->predict(nface, id, precision);
 
 				if(id >= 0)
@@ -281,6 +288,16 @@ int main(int argc, char* argv[])
 
 					if(input_rec) DibujaCuadro(lena, face, msg , 20);
 					else DibujaCuadro(frame, face, msg , 20);
+
+					if(devolver_nombre)
+					{
+						//msg
+						archivoNombre.open ("name.txt");
+						archivoNombre << nombres[id];
+						archivoNombre.close();
+
+						devolver_nombre = false;
+					}
 				}
 				else
 				{
@@ -317,6 +334,7 @@ int main(int argc, char* argv[])
 			break;
 		case 'R':
 		case 'r':
+			input_name = false;
 			input_rec = true;
 			system("clear");
 			cout << msg3 << endl;
@@ -327,6 +345,12 @@ int main(int argc, char* argv[])
 			cvDestroyWindow("input");
 			system("clear");
 			cout << msg1 << endl;
+			break;
+		case 'M':
+		case 'm':
+			devolver_nombre = true;
+			system("clear");
+			cout << msg3 << endl;
 			break;
 		case 27:
 			return 0;
