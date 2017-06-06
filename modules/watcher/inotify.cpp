@@ -15,8 +15,8 @@ using namespace std;
 #define MAX 0x1000
 
 bool filter_image(char *name){
-  const char *before = "file test/";
-  const char *after = " | grep \"image data\" > /dev/null";
+  const char *before = "file watched/";
+  const char *after = " | grep \"image data\" >/dev/null";
   char *command;
   int rv = 0;
 
@@ -36,7 +36,6 @@ bool filter_image(char *name){
 
   //printf("%i\n", rv);
 
-  free(name);
   free(command);
 
   if (rv == 0) {
@@ -47,7 +46,7 @@ bool filter_image(char *name){
 }
 
 bool filter_video(char * name){
-  const char *before = "file test/";
+  const char *before = "file watched/";
   const char *after = " | grep \"ISO Media\" > /dev/null";
   char *command;
   int rv = 0;
@@ -84,7 +83,8 @@ void filter_pass(char *name){
   char *newname;
   char *oldname;
 
-  if(filter_image(name)){
+  //printf("try filter image\n");
+  if(filter_image(name) == true){
     if((newname = (char*)malloc(strlen(newdir)+strlen(name)+1)) != NULL){
       newname[0] = '\0';
       strcat(newname, newdir);
@@ -102,8 +102,10 @@ void filter_pass(char *name){
       fprintf(stderr,"malloc oldname failed!\n");
     }
     rename(oldname, newname);
+    printf("renamed\n");
     pass = true;
   }
+  //printf("try filter video\n");
   if(filter_video(name)){
     const char *before = "ffmpeg -i ";
     const char *after = " -r 2 -ss 00:00:00 ";
@@ -138,9 +140,13 @@ void filter_pass(char *name){
     pclose(pc);
     free(finalname);
     free(command);
+
+    //printf("ffmpeg\n");
+
     pass = false;
   }
   if((pass == false)){
+
     if((oldname = (char*)malloc(strlen(olddir)+strlen(name)+1)) != NULL){
       oldname[0] = '\0';
       strcat(oldname, olddir);
@@ -148,7 +154,8 @@ void filter_pass(char *name){
     } else {
       fprintf(stderr,"malloc oldname failed!\n");
     }
-    int remove(const char *oldname);
+    remove(oldname);
+    //printf("removed\n" );
   }
 }
 
@@ -175,7 +182,7 @@ main(int argc, char *argv[])
 
   /* For each command-line argument, add a watch for all events */
   //for (j = 1; j < argc; j++) {
-  wd = inotify_add_watch(inotifyFd, "./watcher/watched", IN_CREATE);
+  wd = inotify_add_watch(inotifyFd, "/home/victor/work/1984/modules/watcher/watched", IN_CREATE);
   if (wd == -1){
     fprintf(stderr, "inotify watch failure\n");
     abort();
@@ -206,5 +213,8 @@ main(int argc, char *argv[])
     }
   }
 
-  exit(EXIT_SUCCESS);
+  inotify_rm_watch( inotifyFd, wd );
+  close(inotifyFd);
+
+  return EXIT_SUCCESS;
 }
