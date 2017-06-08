@@ -15,7 +15,7 @@ using namespace std;
 #define MAX 0x1000
 
 bool filter_image(char *name){
-  const char *before = "file watched/";
+  const char *before = "file /var/www/html/login_register/images";
   const char *after = " | grep \"image data\" >/dev/null";
   char *command;
   int rv = 0;
@@ -46,7 +46,7 @@ bool filter_image(char *name){
 }
 
 bool filter_video(char * name){
-  const char *before = "file watched/";
+  const char *before = "file /var/www/html/login_register/images";
   const char *after = " | grep \"ISO Media\" > /dev/null";
   char *command;
   int rv = 0;
@@ -79,7 +79,7 @@ void filter_pass(char *name){
 
   bool pass = false;
   const char *newdir = "test/";
-  const char *olddir = "watched/";
+  const char *olddir = "/var/www/html/login_register/images";
   char *newname;
   char *oldname;
 
@@ -182,7 +182,7 @@ main(int argc, char *argv[])
 
   /* For each command-line argument, add a watch for all events */
   //for (j = 1; j < argc; j++) {
-  wd = inotify_add_watch(inotifyFd, "/home/victor/work/1984/modules/watcher/watched", IN_CREATE);
+  wd = inotify_add_watch(inotifyFd, "/var/www/html/login_register/images", IN_CREATE);
   if (wd == -1){
     fprintf(stderr, "inotify watch failure\n");
     abort();

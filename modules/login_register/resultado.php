@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>News</title>
+    <title>Recognicer</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" href="css/stylehome.css">
     <link rel="stylesheet" type="text/css" href="css/stylenews.css">
@@ -29,13 +29,14 @@
   <div class="main-container" style="font-size: 32px; text-align: center;">
   <br>
     <div class="write-container">
-      <img src="<?php echo $_GET['image']?>" alt="recogniced">
-      <div class="">
+      <div>Esta persona es:
         <?php
-          $fichero = file_get_contents('./gente.txt', FILE_USE_INCLUDE_PATH);
-          echo $fichero;
+          $myfile = fopen("/home/tester/1984/modules/recognition/src/name.txt", "r") or die("Unable to open file!");
+          echo fread($myfile,filesize("/home/tester/1984/modules/recognition/src/name.txt"));
+          fclose($myfile);
         ?>
       </div>
+        <img src="<?php echo $_GET['image']?>" alt="recogniced">
     </div>
 
   </div>

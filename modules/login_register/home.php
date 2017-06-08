@@ -4,7 +4,9 @@
   <head>
     <meta charset="utf-8">
     <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" href="css/stylehome.css">
+    <link rel="stylesheet" type="text/css" href="css/stylenews.css">
   </head>
   <body>
   <ul>
@@ -21,6 +23,5 @@
       The actual funcion of this page is to be used like a image uploader.
     </div>
   </div>
-
   </body>
 </html>
