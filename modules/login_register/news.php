@@ -12,7 +12,7 @@
   <div>
   <ul>
     <li><a href="home.php">Home</a></li>
-    <li><a class="active" href="news.php">News</a></li>
+    <li><a class="active" href="news.php">Recognicer</a></li>
     <li><a href="contact.php">Contact</a></li>
     <li style="float:right; color: white;">Hi <?php echo $_SESSION['name']; ?>. <a href="modify.php">Settings</a><a href="logout.php" class="button">Logout</a></li>
   </ul><br><br><br>

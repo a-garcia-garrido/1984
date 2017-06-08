@@ -50,7 +50,7 @@ if ($uploadOk == 0) {
             $fileAfter = filemtime($name_txt);
         }while($fileAfter == $fileBefore);
 
-        header("Location: resultado.php");
+        header("Location: resultado.php?image=$target_file");
 
     } else {
         echo "Sorry, there was an error uploading your file.<br><br>". $_FILES["fichero"]["tmp_name"] . " ----> " . $target_file;
