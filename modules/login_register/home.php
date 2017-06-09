@@ -19,8 +19,12 @@
   <div class="main-container" style="font-size: 32px; text-align: center;">
     <br>
     <div class="write-container">
-      This is the home page for the recognicer project of Oscar, Victor, Antonio, Andres, Jesus.
-      The actual funcion of this page is to be used like a image uploader.
+      THE RECOGNIZER
+      <div style="padding-bottom: 20px; padding-top: 20px"><img src="portada.png" alt="portada"></div>
+      <div style="font-size: 14px; text-align: left; padding-right: 9px; padding-left: 15px; padding-bottom: 20px">
+        This is the home page for the recognicer project of Oscar, Victor, Antonio, Andres, Jesus.
+        The actual funcion of this page is to be used like a image uploader.
+      </div>
     </div>
   </div>
   </body>
