@@ -1,6 +1,6 @@
 <?php
 $name_txt = "/home/tester/1984/modules/recognition/src/name.txt";
-$target_dir = "/home/tester/Pictures/";
+$target_dir = "images/";
 $target_file = $target_dir . basename($_FILES["fichero"]["name"]);
 $uploadOk = 1;
 $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);

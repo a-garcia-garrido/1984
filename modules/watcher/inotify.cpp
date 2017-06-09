@@ -15,8 +15,8 @@ using namespace std;
 #define MAX 0x1000
 
 bool filter_image(char *name){
-  const char *before = "file /home/tester/Pictures";
-  const char *after = " | grep \"image data\" >/dev/null";
+  const char *before = "file /var/www/html/login_register/images/";
+  const char *after = " | grep \"image data\"";
   char *command;
   int rv = 0;
 
@@ -46,7 +46,7 @@ bool filter_image(char *name){
 }
 
 bool filter_video(char * name){
-  const char *before = "file /home/tester/Pictures";
+  const char *before = "file /var/www/html/login_register/images/";
   const char *after = " | grep \"ISO Media\" > /dev/null";
   char *command;
   int rv = 0;
@@ -78,8 +78,8 @@ bool filter_video(char * name){
 void filter_pass(char *name){
 
   bool pass = false;
-  const char *newdir = "/home/tester/1984/modules/recognition/src/images";
-  const char *olddir = "/home/tester/Pictures";
+  const char *newdir = "/home/tester/1984/modules/recognition/src/images/";
+  const char *olddir = "/var/www/html/login_register/images/";
   char *newname;
   char *oldname;
 
@@ -155,7 +155,7 @@ void filter_pass(char *name){
       fprintf(stderr,"malloc oldname failed!\n");
     }
     remove(oldname);
-    printf("removed\n" );
+    printf("removed %s\n", oldname);
   }
 }
 
@@ -182,7 +182,7 @@ main(int argc, char *argv[])
 
   /* For each command-line argument, add a watch for all events */
   //for (j = 1; j < argc; j++) {
-  wd = inotify_add_watch(inotifyFd, "/home/tester/Pictures", IN_MOVED_TO);
+  wd = inotify_add_watch(inotifyFd, "/var/www/html/login_register/images", IN_MOVED_TO);
   if (wd == -1){
     fprintf(stderr, "inotify watch failure\n");
     abort();
@@ -203,8 +203,9 @@ main(int argc, char *argv[])
       for(p = buf; p < buf + numRead;){
         event = (struct inotify_event *) p;
         if(event->len){
-          if(event->mask & IN_CREATE){
-            printf("New directory %s created.\n", event->name);
+          if(event->mask & IN_MOVED_TO){
+            printf("New file %s moved.\n", event->name);
+            sleep(2);
             filter_pass(event->name);
           }
           p += sizeof(struct inotify_event) + event->len;
