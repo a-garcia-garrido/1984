@@ -1,6 +1,7 @@
 #include <sstream>
 #include </home/tester/opencv/include/opencv2/opencv.hpp>
 #include </home/tester/opencv_contrib/modules/face/include/opencv2/face.hpp>
+#include <string.h>
 
 using namespace cv;
 using namespace std;
@@ -172,11 +173,12 @@ int main(int argc, char* argv[])
 	bool input_rec = false;
 	bool input_name = false;
 	bool devolver_nombre = false;
+	bool image_training = false;
 	int identificador = 0, capCount = 0;
 	Mat lena = imread("lena.png");
 
-	string msg1 = "Reconocimiento Facial \n\n\t[E] Iniciar Entrenamiento \n\t [M] Mandar nombre de persona reconocida \n\t[R] Reconocer imagen \n\t[ESC] Salir\n";
-	string msg2 = "Reconocimiento Facial \n\n\t[A] Capturar Rostro \n\t[T] Finalizar Entrenamiento \n\t[ESC] Salir\n";
+	string msg1 = "Reconocimiento Facial \n\n\t[E] Iniciar Entrenamiento \n\t[M] Mandar nombre de persona reconocida \n\t[R] Reconocer imagen \n\t[ESC] Salir\n";
+	string msg2 = "Reconocimiento Facial \n\n\t[A] Capturar Rostro \n\t[B] Entrenar con imagen pre-existente \n\t[T] Finalizar Entrenamiento \n\t[ESC] Salir\n";
 	string msg3 = "Reconocimiento Facial \n\n\t[M] Mandar nombre de persona reconocida \n\t[V] Volver \n\t[ESC] Salir\n";
 	cout << msg1;
 
@@ -189,13 +191,24 @@ int main(int argc, char* argv[])
 			if(!input_name && input_rec){
 				cout << "\nNombre de la foto: ";
 				cin >> entrada_imagen;
+				entrada_imagen = "images/" + entrada_imagen;
 
 				lena = imread(entrada_imagen);
 
 				input_name = true;
 			}
-		}else
-			capture >> frame;
+		}else{
+			if(image_training){
+				cout << "\nNombre de la foto: ";
+				cin >> entrada_imagen;
+				entrada_imagen = "images/" + entrada_imagen;
+
+				frame = imread(entrada_imagen);
+
+				input_name = true;
+			}else
+				capture >> frame;
+		}
 
 		if(input_rec)
 		{
@@ -232,7 +245,7 @@ int main(int argc, char* argv[])
 				RecortaCara(copyFrame(face), nface, lEye, rEye);
 
 				//Agregar el rostro y su numero id a las correspondientes listas
-				if(agregarRostro)
+				if(agregarRostro || image_training)
 				{
 					Mat fface;
 
@@ -243,6 +256,7 @@ int main(int argc, char* argv[])
 					rostros.push_back(nface);
 					ids.push_back(identificador);
 					agregarRostro = false;
+					image_training = false;
 
 					capCount += 1;
 					cout << "Se han capturado " << capCount << " Rostros" << endl;
@@ -257,7 +271,7 @@ int main(int argc, char* argv[])
 					cin >> nombres[identificador];
 					system("clear");
 
-					entrenar = agregarRostro = entrenado = false;
+					entrenar = agregarRostro = entrenado = image_training = false;
 					rostros.clear();
 					ids.clear();
 					identificador += 1;
@@ -338,42 +352,46 @@ int main(int argc, char* argv[])
 
 		switch (waitKey(30))
 		{
-		case 'T':
-		case 't':
-			entrenar = true;
-			break;
-		case 'A':
-		case 'a':
-			agregarRostro = entrenado;
-			break;
-		case 'E':
-		case 'e':
-			entrenado = true;
-			system("clear");
-			cout << msg2 << endl;
-			break;
-		case 'R':
-		case 'r':
-			input_name = false;
-			input_rec = true;
-			system("clear");
-			cout << msg3 << endl;
-			break;
-		case 'V':
-		case 'v':
-			input_rec = false;
-			cvDestroyWindow("input");
-			system("clear");
-			cout << msg1 << endl;
-			break;
-		case 'M':
-		case 'm':
-			devolver_nombre = true;
-			system("clear");
-			cout << msg3 << endl;
-			break;
-		case 27:
-			return 0;
+			case 'T':
+			case 't':
+				entrenar = true;
+				break;
+			case 'A':
+			case 'a':
+				agregarRostro = entrenado;
+				break;
+			case 'E':
+			case 'e':
+				entrenado = true;
+				system("clear");
+				cout << msg2 << endl;
+				break;
+			case 'B':
+			case 'b':
+				image_training = true;
+				break;
+			case 'R':
+			case 'r':
+				input_name = false;
+				input_rec = true;
+				system("clear");
+				cout << msg3 << endl;
+				break;
+			case 'V':
+			case 'v':
+				input_rec = false;
+				cvDestroyWindow("input");
+				system("clear");
+				cout << msg1 << endl;
+				break;
+			case 'M':
+			case 'm':
+				devolver_nombre = true;
+				system("clear");
+				cout << msg3 << endl;
+				break;
+			case 27:
+				return 0;
 		}
 	}
 

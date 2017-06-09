@@ -13,6 +13,8 @@ sstream
 -
 /home/tester/opencv_contrib/modules/face/include/opencv2/face.hpp
 -
+string.h
+-
 
 /home/tester/opencv/include/opencv2/opencv.hpp
 opencv2/opencv_modules.hpp
