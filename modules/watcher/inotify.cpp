@@ -15,7 +15,7 @@ using namespace std;
 #define MAX 0x1000
 
 bool filter_image(char *name){
-  const char *before = "file /var/www/html/login_register/images";
+  const char *before = "file /home/tester/Pictures";
   const char *after = " | grep \"image data\" >/dev/null";
   char *command;
   int rv = 0;
@@ -46,7 +46,7 @@ bool filter_image(char *name){
 }
 
 bool filter_video(char * name){
-  const char *before = "file /var/www/html/login_register/images";
+  const char *before = "file /home/tester/Pictures";
   const char *after = " | grep \"ISO Media\" > /dev/null";
   char *command;
   int rv = 0;
@@ -78,12 +78,12 @@ bool filter_video(char * name){
 void filter_pass(char *name){
 
   bool pass = false;
-  const char *newdir = "test/";
-  const char *olddir = "/var/www/html/login_register/images";
+  const char *newdir = "/home/tester/1984/modules/recognition/src/images";
+  const char *olddir = "/home/tester/Pictures";
   char *newname;
   char *oldname;
 
-  //printf("try filter image\n");
+  printf("try filter image\n");
   if(filter_image(name) == true){
     if((newname = (char*)malloc(strlen(newdir)+strlen(name)+1)) != NULL){
       newname[0] = '\0';
@@ -105,7 +105,7 @@ void filter_pass(char *name){
     printf("renamed\n");
     pass = true;
   }
-  //printf("try filter video\n");
+  printf("try filter video\n");
   if(filter_video(name)){
     const char *before = "ffmpeg -i ";
     const char *after = " -r 2 -ss 00:00:00 ";
@@ -141,7 +141,7 @@ void filter_pass(char *name){
     free(finalname);
     free(command);
 
-    //printf("ffmpeg\n");
+    printf("ffmpeg\n");
 
     pass = false;
   }
@@ -155,7 +155,7 @@ void filter_pass(char *name){
       fprintf(stderr,"malloc oldname failed!\n");
     }
     remove(oldname);
-    //printf("removed\n" );
+    printf("removed\n" );
   }
 }
 
@@ -182,7 +182,7 @@ main(int argc, char *argv[])
 
   /* For each command-line argument, add a watch for all events */
   //for (j = 1; j < argc; j++) {
-  wd = inotify_add_watch(inotifyFd, "/var/www/html/login_register/images", IN_CREATE);
+  wd = inotify_add_watch(inotifyFd, "/home/tester/Pictures", IN_MOVED_TO);
   if (wd == -1){
     fprintf(stderr, "inotify watch failure\n");
     abort();
