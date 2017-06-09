@@ -175,9 +175,9 @@ int main(int argc, char* argv[])
 	int identificador = 0, capCount = 0;
 	Mat lena = imread("lena.png");
 
-	string msg1 = "Reconocimiento Facial \n\n\t[E] Iniciar Entrenamiento \n\t[R] Reconocer imagen input \n\t[ESC] Salir\n";
+	string msg1 = "Reconocimiento Facial \n\n\t[E] Iniciar Entrenamiento \n\t [M] Mandar nombre de persona reconocida \n\t[R] Reconocer imagen \n\t[ESC] Salir\n";
 	string msg2 = "Reconocimiento Facial \n\n\t[A] Capturar Rostro \n\t[T] Finalizar Entrenamiento \n\t[ESC] Salir\n";
-	string msg3 = "Reconocimiento Facial \n\n\t[M] Mandar nombre de persona reconocida \n\t[V] Volver\n";
+	string msg3 = "Reconocimiento Facial \n\n\t[M] Mandar nombre de persona reconocida \n\t[V] Volver \n\t[ESC] Salir\n";
 	cout << msg1;
 
 	bool correcto = Init();
@@ -303,12 +303,32 @@ int main(int argc, char* argv[])
 				{
 					if(input_rec) DibujaCuadro(lena, face, "???", 20);
 					else DibujaCuadro(frame, face, "???", 20);
+
+					if(devolver_nombre)
+					{
+						//msg
+						archivoNombre.open ("name.txt");
+						archivoNombre << "nadie";
+						archivoNombre.close();
+
+						devolver_nombre = false;
+					}
 				}
 			}
 			else
 				{
 					if(input_rec) DibujaCuadro(lena, face, "???", 20);
 					else DibujaCuadro(frame, face, "???", 20);
+
+					if(devolver_nombre)
+					{
+						//msg
+						archivoNombre.open ("name.txt");
+						archivoNombre << "nadie";
+						archivoNombre.close();
+
+						devolver_nombre = false;
+					}
 				}
 		}
 
