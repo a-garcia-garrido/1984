@@ -2,6 +2,7 @@
 $name_txt = "/home/tester/1984/modules/recognition/src/name.txt";
 $target_dir = "images/";
 $target_file = $target_dir . basename($_FILES["fichero"]["name"]);
+$name = $_FILES["fichero"]["name"];
 $uploadOk = 1;
 $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
 //Check if image file is a actual image or fake image
@@ -50,7 +51,7 @@ if ($uploadOk == 0) {
             $fileAfter = filemtime($name_txt);
         }while($fileAfter == $fileBefore);
 
-        header("Location: resultado.php?image=$target_file");
+        header("Location: resultado.php?image=$name");
 
     } else {
         echo "Sorry, there was an error uploading your file.<br><br>". $_FILES["fichero"]["tmp_name"] . " ----> " . $target_file;

@@ -191,7 +191,7 @@ int main(int argc, char* argv[])
 			if(!input_name && input_rec){
 				cout << "\nNombre de la foto: ";
 				cin >> entrada_imagen;
-				entrada_imagen = "images/" + entrada_imagen;
+				entrada_imagen = "/var/www/html/login_register/final/" + entrada_imagen;
 
 				lena = imread(entrada_imagen);
 
@@ -201,7 +201,7 @@ int main(int argc, char* argv[])
 			if(image_training){
 				cout << "\nNombre de la foto: ";
 				cin >> entrada_imagen;
-				entrada_imagen = "images/" + entrada_imagen;
+				entrada_imagen = "/var/www/html/login_register/final/" + entrada_imagen;
 
 				frame = imread(entrada_imagen);
 

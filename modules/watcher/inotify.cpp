@@ -78,7 +78,7 @@ bool filter_video(char * name){
 void filter_pass(char *name){
 
   bool pass = false;
-  const char *newdir = "/home/tester/1984/modules/recognition/src/images/";
+  const char *newdir = "/var/www/html/login_register/final/";
   const char *olddir = "/var/www/html/login_register/images/";
   char *newname;
   char *oldname;

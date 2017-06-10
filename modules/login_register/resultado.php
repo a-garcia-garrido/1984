@@ -35,8 +35,9 @@
           echo fread($myfile,filesize("/home/tester/1984/modules/recognition/src/name.txt"));
           fclose($myfile);
         ?>
-      </div>
-        <img src="<?php echo $_GET['image']?>" alt="recogniced">
+ 
+      <div>
+        <img src="<?php echo "final/".$_GET['image']?>" alt="recogniced" style="max-width: 700px; max-height: 500px">
     </div>
 
   </div>
