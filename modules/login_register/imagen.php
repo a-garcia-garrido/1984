@@ -1,5 +1,5 @@
 <?php
-$name_txt = "/home/tester/1984/modules/recognition/src/name.txt";
+$name_txt = "/home/tester/1984/modules/recognition/src/lee/name.txt";
 $target_dir = "images/";
 $target_file = $target_dir . basename($_FILES["fichero"]["name"]);
 $name = $_FILES["fichero"]["name"];

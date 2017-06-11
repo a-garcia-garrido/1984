@@ -291,7 +291,7 @@ int main(int argc, char* argv[])
 
 				//cualquier precision mayor que threshold id = -1
 				//reducir o aumentar este valor segun nos convenga
-				model->setThreshold(100);
+				model->setThreshold(70);
 				model->predict(nface, id, precision);
 
 				if(id >= 0)
@@ -306,7 +306,7 @@ int main(int argc, char* argv[])
 					if(devolver_nombre)
 					{
 						//msg
-						archivoNombre.open ("name.txt");
+						archivoNombre.open ("lee/name.txt");
 						archivoNombre << nombres[id];
 						archivoNombre.close();
 
@@ -321,7 +321,7 @@ int main(int argc, char* argv[])
 					if(devolver_nombre)
 					{
 						//msg
-						archivoNombre.open ("name.txt");
+						archivoNombre.open ("lee/name.txt");
 						archivoNombre << "nadie";
 						archivoNombre.close();
 
@@ -337,7 +337,7 @@ int main(int argc, char* argv[])
 					if(devolver_nombre)
 					{
 						//msg
-						archivoNombre.open ("name.txt");
+						archivoNombre.open ("lee/name.txt");
 						archivoNombre << "nadie";
 						archivoNombre.close();
 

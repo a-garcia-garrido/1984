@@ -31,8 +31,8 @@
     <div class="write-container">
       <div>Esta persona es:
         <?php
-          $myfile = fopen("/home/tester/1984/modules/recognition/src/name.txt", "r") or die("Unable to open file!");
-          echo fread($myfile,filesize("/home/tester/1984/modules/recognition/src/name.txt"));
+          $myfile = fopen("/home/tester/1984/modules/recognition/src/lee/name.txt", "r") or die("Unable to open file!");
+          echo fread($myfile,filesize("/home/tester/1984/modules/recognition/src/lee/name.txt"));
           fclose($myfile);
         ?>
  
